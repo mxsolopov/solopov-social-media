@@ -1,13 +1,13 @@
 export default () => {
     return `<!doctype html>
-      <html lang="en">
+      <html lang="ru">
         <head>
           <meta charset="utf-8">
-          <title>MERN Kickstart</title>
+          <title>Solopov Social Network</title>
         </head>
         <body>
           <div id="root"></div>
-          <script type="text/javascript" src="/dist/bundle.js"></script>
+          <script src="/dist/bundle.js"></script>
         </body>
       </html>`
 }
