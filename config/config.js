@@ -8,5 +8,4 @@ const config = {
     "mongodb+srv://mxsolopov:UCDtYU60jv9t65Kt@cluster0.l0v0ehu.mongodb.net/?retryWrites=true&w=majority",
 }
 
-// UCDtYU60jv9t65Kt
 export default config

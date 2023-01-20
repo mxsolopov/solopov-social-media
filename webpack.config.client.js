@@ -1,40 +1,39 @@
-const path = require('path')
-const webpack = require('webpack')
+const path = require("path")
+const webpack = require("webpack")
+const ReactRefreshPlugin = require("@pmmmwh/react-refresh-webpack-plugin")
 const CURRENT_WORKING_DIR = process.cwd()
 
 const config = {
-    name: "browser",
-    mode: "development",
-    devtool: 'eval-source-map',
-    entry: [
-        'webpack-hot-middleware/client?reload=true',
-        path.join(CURRENT_WORKING_DIR, 'client/main.js')
+  name: "browser",
+  mode: "development",
+  // devtool: 'eval-source-map',
+  devtool: "cheap-module-source-map",
+  entry: [
+    "webpack-hot-middleware/client?reload=true",
+    path.join(CURRENT_WORKING_DIR, "client/main.js"),
+  ],
+  output: {
+    path: path.join(CURRENT_WORKING_DIR, "/dist"),
+    filename: "bundle.js",
+    publicPath: "/dist/",
+  },
+  module: {
+    rules: [
+      {
+        test: /\.jsx?$/,
+        exclude: /node_modules/,
+        use: ["babel-loader"],
+      },
     ],
-    output: {
-        path: path.join(CURRENT_WORKING_DIR , '/dist'),
-        filename: 'bundle.js',
-        publicPath: '/dist/'
-    },
-    module: {
-        rules: [
-            {
-                test: /\.jsx?$/,
-                exclude: /node_modules/,
-                use: [
-                    'babel-loader'
-                ]
-            }
-        ]
-    },  
-    plugins: [
-          new webpack.HotModuleReplacementPlugin(),
-          new webpack.NoEmitOnErrorsPlugin()
-    ],
-    resolve: {
-        alias: {
-          'react-dom': '@hot-loader/react-dom'
-        }
-    }
+  },
+  plugins: [
+    new webpack.HotModuleReplacementPlugin(),
+    new ReactRefreshPlugin({
+      overlay: {
+        sockIntegration: "whm",
+      },
+    }),
+  ].filter(Boolean),
 }
 
 module.exports = config
