@@ -5,7 +5,12 @@ import compress from "compression"
 import cors from "cors"
 import helmet from "helmet"
 
+import userRoutes from "./routes/user.routes"
+import authRoutes from "./routes/auth.routes"
+
 const app = express()
+
+app.use("/", userRoutes)
 
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: true }))
