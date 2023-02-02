@@ -1,10 +1,12 @@
 import React from "react"
+import MainRouter from "./MainRouter"
+import { BrowserRouter } from "react-router-dom"
 
 const App = () => {
-  const [value, setValue] = React.useState("")
   return (
-    <div>
-    </div>
+    <BrowserRouter>
+      <MainRouter />
+    </BrowserRouter>
   )
 }
 
