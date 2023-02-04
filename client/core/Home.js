@@ -1,46 +1,12 @@
 import React from "react"
-import {
-  Container,
-  Nav,
-  Navbar,
-  Button,
-  Stack,
-  Row,
-  Col,
-  Card,
-} from "react-bootstrap"
-import logo from "../assets/images/logo.svg"
+import { Container, Row, Col, Card } from "react-bootstrap"
 import template from "../assets/images/template.png"
+import Layout from "./Layout"
 
 const App = () => {
   return (
-    <>
-      <Navbar bg="dark" expand="lg" variant="dark" className="sticky-top">
-        <Container fluid="xl">
-          <Navbar.Brand href="/">
-            <img
-              alt=""
-              src={logo}
-              width="30"
-              height="30"
-              className="d-inline-block align-top"
-            />{" "}
-            Solopov Space
-          </Navbar.Brand>
-          <Navbar.Toggle aria-controls="basic-navbar-nav" />
-          <Navbar.Collapse
-            id="basic-navbar-nav"
-            className="justify-content-end"
-          >
-            <Stack direction="horizontal" gap={3}>
-              <Button variant="outline-light">Users</Button>{" "}
-              <Button variant="secondary">Sign up</Button>{" "}
-              <Button variant="primary">Sign in</Button>{" "}
-            </Stack>
-          </Navbar.Collapse>
-        </Container>
-      </Navbar>
-      <section className="my-5">
+    <Layout>
+      <section>
         <Container fluid="xl">
           <Row xs={1} md={2} className="g-4">
             {Array.from({ length: 4 }).map((_, idx) => (
@@ -61,12 +27,7 @@ const App = () => {
           </Row>
         </Container>
       </section>
-      <footer className="bg-light text-center text-lg-start">
-        <div className="text-center p-3">
-          © 2023 Copyright: Solopov Social Network
-        </div>
-      </footer>
-    </>
+    </Layout>
   )
 }
 export default App
