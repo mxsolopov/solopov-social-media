@@ -91,6 +91,9 @@ const Signup = () => {
                     onChange={handleChange("password")}
                   />
                 </Form.Group>
+                <Form.Text className="text-danger d-block mb-3">
+                  {values.error}
+                </Form.Text>
                 <Button variant="primary" type="submit" onClick={clickSubmit}>
                   Submit
                 </Button>
