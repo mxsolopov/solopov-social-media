@@ -4,7 +4,6 @@
   "description": "Application for portfolio",
   "author": "Maksim Solopov",
   "license": "MIT",
-  "type": "module",
   "keywords": [
     "react",
     "node",
