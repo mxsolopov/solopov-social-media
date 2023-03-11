@@ -1,20 +1,30 @@
 import React from "react"
-import {
-  Container,
-  Navbar,
-  Button,
-  Stack,
-} from "react-bootstrap"
+import { Container, Navbar, Button, Stack } from "react-bootstrap"
 import logo from "../assets/images/logo.svg"
-import { useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom"
 
-const Layout = ({children}) => {
-
+const Layout = ({ children }) => {
   const navigate = useNavigate()
+  const headerRef = React.useRef(null)
+  const footerRef = React.useRef(null)
+  const [contentMinHeight, setContentMinHeight] = React.useState(0)
+  React.useEffect(() => {
+    setContentMinHeight(
+      window.innerHeight -
+        headerRef.current.offsetHeight -
+        footerRef.current.offsetHeight
+    )
+  }, [])
 
   return (
     <>
-      <Navbar bg="dark" expand="lg" variant="dark" className="sticky-top mb-5">
+      <Navbar
+        bg="dark"
+        expand="lg"
+        variant="dark"
+        className="sticky-top"
+        ref={headerRef}
+      >
         <Container fluid="xl">
           <Navbar.Brand role="button" onClick={() => navigate("/")}>
             <img
@@ -32,15 +42,27 @@ const Layout = ({children}) => {
             className="justify-content-end"
           >
             <Stack direction="horizontal" gap={3}>
-              <Button variant="outline-light" onClick={() => navigate("/users")}>Users</Button>{" "}
-              <Button variant="primary" onClick={() => navigate("/signin")}>Sign in</Button>{" "}
-              <Button variant="secondary" onClick={() => navigate("/signup")}>Sign up</Button>{" "}
+              <Button
+                variant="outline-light"
+                onClick={() => navigate("/users")}
+              >
+                Users
+              </Button>{" "}
+              <Button variant="primary" onClick={() => navigate("/signin")}>
+                Sign in
+              </Button>{" "}
+              <Button variant="secondary" onClick={() => navigate("/signup")}>
+                Sign up
+              </Button>{" "}
             </Stack>
           </Navbar.Collapse>
         </Container>
       </Navbar>
-      {children}
-      <footer className="bg-light text-center text-lg-start mt-5">
+      <main className="py-5" style={{ minHeight: contentMinHeight + "px" }}>{children}</main>
+      <footer
+        className="bg-light text-center text-lg-start"
+        ref={footerRef}
+      >
         <div className="text-center p-3">
           © 2023 Copyright: Solopov Social Network
         </div>

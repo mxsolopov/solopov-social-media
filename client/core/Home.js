@@ -6,11 +6,10 @@ import Layout from "./Layout"
 const App = () => {
   return (
     <Layout>
-      <section>
         <Container fluid="xl">
-          <Row xs={1} md={2} className="g-4">
+          <Row className="g-4">
             {Array.from({ length: 4 }).map((_, idx) => (
-              <Col key={idx}>
+              <Col xs={12} md={6} key={idx}>
                 <Card>
                   <Card.Img variant="top" src={template} />
                   <Card.Body>
@@ -26,7 +25,6 @@ const App = () => {
             ))}
           </Row>
         </Container>
-      </section>
     </Layout>
   )
 }

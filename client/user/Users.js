@@ -3,9 +3,11 @@ import { Container, ListGroup, Button, Image } from "react-bootstrap"
 import Layout from "../core/Layout"
 import logo from "../assets/images/logo.svg"
 import { list } from "./api-user.js"
+import { useNavigate } from "react-router"
 
 const Users = () => {
   const [users, setUsers] = React.useState([])
+  const navigate = useNavigate()
 
   React.useEffect(() => {
     const abortController = new AbortController()
@@ -37,7 +39,7 @@ const Users = () => {
               >
                 <Image src={logo} rounded width="40px" height="40px" />
                 <div className="ms-2 me-auto fw-bold">{item.name}</div>
-                <Button variant="primary">See profile</Button>
+                <Button variant="primary" onClick={() => navigate("/user/" + item._id)}>See profile</Button>
               </ListGroup.Item>
             )
           })}
