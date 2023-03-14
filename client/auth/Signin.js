@@ -58,22 +58,22 @@ const Signin = (props) => {
               <Image src={template} className="w-100" />
             </Col>
             <Col>
-              <h1 className="mb-4 text-center mt-4 mt-md-0">Sign in</h1>
+              <h1 className="mb-4 text-center mt-4 mt-md-0">Авторизация</h1>
               <Form className="px-0 px-md-5">
                 <Form.Group className="mb-3" controlId="signUpEmail">
-                  <Form.Label>Email address</Form.Label>
+                  <Form.Label>Email</Form.Label>
                   <Form.Control
                     type="email"
-                    placeholder="Enter email"
+                    placeholder="Введите email"
                     onChange={handleChange("email")}
                   />
                 </Form.Group>
 
                 <Form.Group className="mb-3" controlId="signUpPassword">
-                  <Form.Label>Password</Form.Label>
+                  <Form.Label>Пароль</Form.Label>
                   <Form.Control
                     type="password"
-                    placeholder="Password"
+                    placeholder="Введите пароль"
                     onChange={handleChange("password")}
                   />
                 </Form.Group>
@@ -81,7 +81,7 @@ const Signin = (props) => {
                   {values.error}
                 </Form.Text>
                 <Button variant="primary" type="submit" onClick={clickSubmit}>
-                  Submit
+                  Войти
                 </Button>
               </Form>
             </Col>

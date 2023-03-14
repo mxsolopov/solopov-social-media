@@ -60,34 +60,31 @@ const Signup = () => {
               <Image src={template} className="w-100" />
             </Col>
             <Col>
-              <h1 className="mb-4 text-center mt-4 mt-md-0">Sign up</h1>
+              <h1 className="mb-4 text-center mt-4 mt-md-0">Регистрация</h1>
               <Form className="px-0 px-md-5">
                 <Form.Group className="mb-3" controlId="signUpName">
-                  <Form.Label>Name</Form.Label>
+                  <Form.Label>Имя</Form.Label>
                   <Form.Control
                     type="text"
-                    placeholder="Enter your name"
+                    placeholder="Введите имя"
                     onChange={handleChange("name")}
                   />
                 </Form.Group>
 
                 <Form.Group className="mb-3" controlId="signUpEmail">
-                  <Form.Label>Email address</Form.Label>
+                  <Form.Label>Email</Form.Label>
                   <Form.Control
                     type="email"
-                    placeholder="Enter email"
+                    placeholder="Введите email"
                     onChange={handleChange("email")}
                   />
-                  <Form.Text className="text-muted">
-                    We'll never share your email with anyone else.
-                  </Form.Text>
                 </Form.Group>
 
                 <Form.Group className="mb-3" controlId="signUpPassword">
-                  <Form.Label>Password</Form.Label>
+                  <Form.Label>Пароль</Form.Label>
                   <Form.Control
                     type="password"
-                    placeholder="Password"
+                    placeholder="Введите пароль"
                     onChange={handleChange("password")}
                   />
                 </Form.Group>
@@ -95,7 +92,7 @@ const Signup = () => {
                   {values.error}
                 </Form.Text>
                 <Button variant="primary" type="submit" onClick={clickSubmit}>
-                  Submit
+                  Зарегистрироваться
                 </Button>
               </Form>
             </Col>
@@ -104,12 +101,12 @@ const Signup = () => {
       </Layout>
       <Modal show={values.open} onHide={afterSignUp}>
         <Modal.Header closeButton>
-          <Modal.Title>Successfull sign up</Modal.Title>
+          <Modal.Title>Успешная регистрация</Modal.Title>
         </Modal.Header>
-        <Modal.Body>Your profile has been created! Thank you!</Modal.Body>
+        <Modal.Body>Ваш профиль создан. Благодарим за регистрацию!</Modal.Body>
         <Modal.Footer>
           <Button variant="secondary" onClick={afterSignUp}>
-            Close
+            Закрыть
           </Button>
           <Button variant="primary" onClick={afterSignUp}>
             OK

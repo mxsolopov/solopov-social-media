@@ -12,7 +12,7 @@ import app from "./express"
 const CURRENT_WORKING_DIR = process.cwd()
 app.use("/dist", express.static(path.join(CURRENT_WORKING_DIR, "dist")))
 
-app.get("/", (req, res) => {
+app.get("/*", (req, res) => {
   res.status(200).type("html").send(html)
 })
 
