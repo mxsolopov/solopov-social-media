@@ -39,7 +39,7 @@ const Users = () => {
               >
                 <Image src={logo} rounded width="40px" height="40px" />
                 <div className="ms-2 me-auto fw-bold">{item.name}</div>
-                <Button variant="primary" onClick={() => navigate("/user/" + item._id)}>See profile</Button>
+                <Button variant="primary" onClick={() => navigate("/user/" + item._id)}>Подробнее</Button>
               </ListGroup.Item>
             )
           })}

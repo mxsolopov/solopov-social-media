@@ -1,14 +1,13 @@
 import path from "path"
 import express from "express"
 import mongoose from "mongoose"
-// import template from "./../template"
 import config from "./../config/config"
 import app from "./express"
 // comment out before building for production
-import devBundle from "./devBundle"
+// import devBundle from "./devBundle"
 
 //comment out before building for production
-devBundle.compile(app)
+// devBundle.compile(app)
 
 const CURRENT_WORKING_DIR = process.cwd()
 app.use("/dist", express.static(path.join(CURRENT_WORKING_DIR, "dist")))
