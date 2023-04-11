@@ -1,4 +1,5 @@
 import React from "react"
+import { Buffer } from "buffer"
 import {
   Container,
   Row,
@@ -13,24 +14,35 @@ import { read, update, remove } from "./api-user"
 import { useNavigate } from "react-router"
 import { useParams } from "react-router-dom"
 import Layout from "../core/Layout"
-import avatar from "../assets/images/avatar.jpg"
+import avatar from "../assets/images/avatar.png"
 import { Trash, PencilSimple, FloppyDisk } from "phosphor-react"
+import OverlayTrigger from "react-bootstrap/OverlayTrigger"
+import Tooltip from "react-bootstrap/Tooltip"
 
 const Profile = () => {
   const { userId } = useParams()
   const [user, setUser] = React.useState({})
   const [redirectToSignin, setRedirectToSignin] = React.useState(false)
   const navigate = useNavigate()
+  // Состояние редактирования полей профиля
   const [edit, setEdit] = React.useState(false)
+  // Поля профиля
   const [name, setName] = React.useState("")
   const [email, setEmail] = React.useState("")
   const [password, setPassword] = React.useState("")
+  const [about, setAbout] = React.useState("")
+  // Состояние модалки удаления профиля
   const [deleteModal, setDeleteModal] = React.useState(false)
+  // Токен и данные пользователя
   const jwt = auth.isAuthenticated()
+  // Файл аватарки
+  const [file, setFile] = React.useState(null)
+  const [savedAvatar, setSavedAvatar] = React.useState(null)
 
   const isAuthenticated =
     auth.isAuthenticated().user && auth.isAuthenticated().user._id == user._id
 
+  // Обновление данных в профиле
   React.useEffect(() => {
     const abortController = new AbortController()
     const signal = abortController.signal
@@ -41,7 +53,12 @@ const Profile = () => {
         setUser(data)
         setName(data.name)
         setEmail(data.email)
+        setAbout(data.about)
         setPassword("")
+        // setSavedAvatar(
+        //   new Blob(data.photo.data, { type: 'image/jpeg' })
+        // )
+        // console.log(new Blob(data.photo.data, { type: 'image/jpeg' }))
       }
     })
 
@@ -52,6 +69,7 @@ const Profile = () => {
 
   if (redirectToSignin) navigate("/signin")
 
+  // Удаление профиля
   const deleteAccount = () => {
     remove(
       {
@@ -68,11 +86,13 @@ const Profile = () => {
     })
   }
 
+  // Обработчик редактирования полей
   const editSubmit = () => {
     const user = {
       name: name || undefined,
       email: email || undefined,
       password: password || undefined,
+      about: about || undefined,
     }
     update(
       {
@@ -89,18 +109,92 @@ const Profile = () => {
     })
   }
 
+  // Обработчик загрузки аватарки
+  const handleFileSelect = (event) => {
+    setFile(event.target.files[0])
+  }
+
+  // Сохранение аватарки в базу данных
+  const saveFileToBase = (fileData) => {
+    const buffer = new Buffer.from(fileData)
+    const user = {
+      name: name || undefined,
+      email: email || undefined,
+      password: password || undefined,
+      about: about || undefined,
+      avatar: buffer || undefined,
+    }
+    update(
+      {
+        userId: userId,
+      },
+      {
+        t: jwt.token,
+      },
+      user
+    ).then((data) => {
+      console.log(data)
+    })
+  }
+
+  // Обработчик формы загрузки аватара
+  const handleSubmit = (event) => {
+    event.preventDefault()
+
+    const reader = new FileReader()
+    reader.onload = () => {
+      const fileData = new Uint8Array(reader.result)
+      saveFileToBase(fileData)
+    }
+    reader.readAsArrayBuffer(file)
+  }
+
+  // Тултип для аватара
+  const renderTooltip = (props) => (
+    <Tooltip id="avatar-tooltip" {...props}>
+      {file ? "Change photo" : "Upload your photo"}
+    </Tooltip>
+  )
+
   return (
     <>
       <Layout>
         <Container fluid="xl">
           <Row xs={1} md={2} className="g-4">
             <Col xl={4}>
-              <Image
-                src={avatar}
-                alt="Avatar"
-                roundedCircle
-                style={{ width: "100px", height: "100px" }}
-              />
+              <Form onSubmit={handleSubmit}>
+                <Form.Group controlId="profile-photo">
+                  <Form.Label style={{ cursor: "pointer" }}>
+                    <OverlayTrigger
+                      placement="bottom"
+                      delay={{ show: 0, hide: 400 }}
+                      overlay={renderTooltip}
+                    >
+                      <Image
+                        src={
+                          file
+                            ? URL.createObjectURL(file)
+                            : savedAvatar
+                            ? savedAvatar
+                            : avatar
+                        }
+                        alt="Avatar"
+                        roundedCircle
+                        style={{
+                          width: "100px",
+                          height: "100px",
+                          objectFit: "cover",
+                        }}
+                      />
+                    </OverlayTrigger>
+                  </Form.Label>
+                  <Form.Control
+                    type="file"
+                    onChange={handleFileSelect}
+                    className="d-none"
+                  />
+                </Form.Group>
+              </Form>
               <div className="d-flex">
                 <div className="mt-2 me-1">{user.name}</div>
               </div>
@@ -181,6 +275,24 @@ const Profile = () => {
                   </Col>
                 </Row>
               )}
+              <Row>
+                <Col>
+                  {edit ? (
+                    <Form.Control
+                      as="textarea"
+                      placeholder="Кратко о себе"
+                      className="mb-3"
+                      value={about}
+                      onChange={(e) => setAbout(e.target.value)}
+                    />
+                  ) : (
+                    <div className="mb-3">
+                      <div className="text-muted">О себе</div>
+                      <div className="mt-1">{user.about}</div>
+                    </div>
+                  )}
+                </Col>
+              </Row>
               <hr />
               {isAuthenticated && (
                 <Button

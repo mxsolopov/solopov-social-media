@@ -17,6 +17,15 @@ const UserSchema = new mongoose.Schema({
     type: String,
     required: "Password is required",
   },
+  about: {
+    type: String,
+    default: "Напишите о себе",
+    trim: true,
+  },
+  avatar: {
+    type: String,
+    default: "Аватар",
+  },
   salt: String,
   updated: Date,
   created: {
