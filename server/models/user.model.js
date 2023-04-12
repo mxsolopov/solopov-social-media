@@ -24,7 +24,7 @@ const UserSchema = new mongoose.Schema({
   },
   avatar: {
     type: String,
-    default: "Аватар",
+    default: "avatar-template-mx.png"
   },
   salt: String,
   updated: Date,

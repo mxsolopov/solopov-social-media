@@ -1,5 +1,4 @@
 import React from "react"
-import { Buffer } from "buffer"
 import {
   Container,
   Row,
@@ -14,9 +13,7 @@ import { read, update, remove } from "./api-user"
 import { useNavigate } from "react-router"
 import { useParams } from "react-router-dom"
 import Layout from "../core/Layout"
-import avatar from "../assets/images/avatar.png"
 import { Trash, PencilSimple, FloppyDisk } from "phosphor-react"
-import OverlayTrigger from "react-bootstrap/OverlayTrigger"
 import Tooltip from "react-bootstrap/Tooltip"
 
 const Profile = () => {
@@ -36,8 +33,8 @@ const Profile = () => {
   // Токен и данные пользователя
   const jwt = auth.isAuthenticated()
   // Файл аватарки
-  const [file, setFile] = React.useState(null)
-  const [savedAvatar, setSavedAvatar] = React.useState(null)
+  const [avatar, setAvatar] = React.useState(null)
+  const [avatarFileName, setAvatarFileName] = React.useState("")
 
   const isAuthenticated =
     auth.isAuthenticated().user && auth.isAuthenticated().user._id == user._id
@@ -54,11 +51,8 @@ const Profile = () => {
         setName(data.name)
         setEmail(data.email)
         setAbout(data.about)
+        setAvatarFileName(data.avatar)
         setPassword("")
-        // setSavedAvatar(
-        //   new Blob(data.photo.data, { type: 'image/jpeg' })
-        // )
-        // console.log(new Blob(data.photo.data, { type: 'image/jpeg' }))
       }
     })
 
@@ -109,44 +103,36 @@ const Profile = () => {
     })
   }
 
-  // Обработчик загрузки аватарки
-  const handleFileSelect = (event) => {
-    setFile(event.target.files[0])
+  // Сохраняем выбранный файл аватарки в состоянии компонента
+  const handleAvatarChange = (e) => {
+    setAvatar(e.target.files[0])
   }
 
-  // Сохранение аватарки в базу данных
-  const saveFileToBase = (fileData) => {
-    const buffer = new Buffer.from(fileData)
-    const user = {
-      name: name || undefined,
-      email: email || undefined,
-      password: password || undefined,
-      about: about || undefined,
-      avatar: buffer || undefined,
-    }
-    update(
-      {
-        userId: userId,
-      },
-      {
-        t: jwt.token,
-      },
-      user
-    ).then((data) => {
-      console.log(data)
-    })
-  }
+  const handleSubmit = async (event) => {
+    event.preventDefault() // Отменяем стандартное поведение отправки формы
 
-  // Обработчик формы загрузки аватара
-  const handleSubmit = (event) => {
-    event.preventDefault()
+    const formData = new FormData() // Создаем объект FormData для передачи данных формы
+    formData.append("avatar", avatar) // Добавляем файл аватарки в объект FormData
 
-    const reader = new FileReader()
-    reader.onload = () => {
-      const fileData = new Uint8Array(reader.result)
-      saveFileToBase(fileData)
+    try {
+      const response = await fetch(`/api/avatar/${userId}`, {
+        // Отправляем PUT-запрос на сервер с указанием id пользователя
+        method: "PUT",
+        body: formData, // Передаем объект FormData с данными формы
+      })
+
+      if (response.ok) {
+        // Если ответ сервера успешный (статус 200-299)
+        const data = await response.json() // Парсим JSON-ответ
+        setAvatarFileName(data.avatarFileName)
+        setAvatar(null)
+        console.log("Success:", data)
+      } else {
+        throw new Error("Ошибка при загрузке аватарки") // Генерируем ошибку в случае неуспешного ответа сервера
+      }
+    } catch (error) {
+      console.error("Error:", error)
     }
-    reader.readAsArrayBuffer(file)
   }
 
   // Тултип для аватара
@@ -165,35 +151,28 @@ const Profile = () => {
               <Form onSubmit={handleSubmit}>
                 <Form.Group controlId="profile-photo">
                   <Form.Label style={{ cursor: "pointer" }}>
-                    <OverlayTrigger
-                      placement="bottom"
-                      delay={{ show: 0, hide: 400 }}
-                      overlay={renderTooltip}
-                    >
-                      <Image
-                        src={
-                          file
-                            ? URL.createObjectURL(file)
-                            : savedAvatar
-                            ? savedAvatar
-                            : avatar
-                        }
-                        alt="Avatar"
-                        roundedCircle
-                        style={{
-                          width: "100px",
-                          height: "100px",
-                          objectFit: "cover",
-                        }}
-                      />
-                    </OverlayTrigger>
+                    <Image
+                      src={
+                        avatar
+                          ? URL.createObjectURL(avatar)
+                          : `/avatars/${avatarFileName}`
+                      }
+                      alt="Avatar"
+                      roundedCircle
+                      style={{
+                        width: "100px",
+                        height: "100px",
+                        objectFit: "cover",
+                      }}
+                    />
                   </Form.Label>
                   <Form.Control
                     type="file"
-                    onChange={handleFileSelect}
+                    onChange={handleAvatarChange}
                     className="d-none"
                   />
                 </Form.Group>
+                {avatar && <Button type="submit">Загрузить</Button>}
               </Form>
               <div className="d-flex">
                 <div className="mt-2 me-1">{user.name}</div>

@@ -1,13 +1,13 @@
 import React from "react"
 import { Container, ListGroup, Button, Image } from "react-bootstrap"
 import Layout from "../core/Layout"
-import logo from "../assets/images/logo.svg"
 import { list } from "./api-user.js"
 import { useNavigate } from "react-router"
 
 const Users = () => {
   const [users, setUsers] = React.useState([])
   const navigate = useNavigate()
+  console.log(users);
 
   React.useEffect(() => {
     const abortController = new AbortController()
@@ -30,16 +30,29 @@ const Users = () => {
     <Layout>
       <Container fluid="xl">
         <ListGroup as="ol">
-          {users.map((item, i) => {
+          {users.map((user, i) => {
             return (
               <ListGroup.Item
                 as="li"
                 key={i}
                 className="d-flex justify-content-between align-items-center"
               >
-                <Image src={logo} rounded width="40px" height="40px" />
-                <div className="ms-2 me-auto fw-bold">{item.name}</div>
-                <Button variant="primary" onClick={() => navigate("/user/" + item._id)}>Подробнее</Button>
+                <Image
+                  src={`/avatars/${user.avatar}`}
+                  rounded
+                  style={{
+                    width: "40px",
+                    height: "40px",
+                    objectFit: "cover",
+                  }}
+                />
+                <div className="ms-2 me-auto fw-bold">{user.name}</div>
+                <Button
+                  variant="primary"
+                  onClick={() => navigate("/user/" + user._id)}
+                >
+                  Подробнее
+                </Button>
               </ListGroup.Item>
             )
           })}
