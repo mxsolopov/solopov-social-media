@@ -14,11 +14,12 @@ import { useNavigate } from "react-router"
 import { useParams } from "react-router-dom"
 import Layout from "../core/Layout"
 import { Trash, PencilSimple, FloppyDisk } from "phosphor-react"
-import Tooltip from "react-bootstrap/Tooltip"
+import FollowProfileButton from "./FollowProfileButton"
 
 const Profile = () => {
   const { userId } = useParams()
   const [user, setUser] = React.useState({})
+  const [following, setFollowing] = React.useState(false)
   const [redirectToSignin, setRedirectToSignin] = React.useState(false)
   const navigate = useNavigate()
   // Состояние редактирования полей профиля
@@ -47,6 +48,8 @@ const Profile = () => {
       if (data && data.error) {
         setRedirectToSignin(true)
       } else {
+        let following = checkFollow(data)
+        setFollowing(following)
         setUser(data)
         setName(data.name)
         setEmail(data.email)
@@ -62,6 +65,28 @@ const Profile = () => {
   }, [userId, edit])
 
   if (redirectToSignin) navigate("/signin")
+
+  const clickFollowButton = (callApi) => {
+    callApi({
+      userId: jwt.user._id
+    }, {
+      t: jwt.token
+    }, user._id).then((data) => {
+      if (data.error) {
+        
+      } else {
+        setFollowing(!following)
+      }
+    })
+  }
+
+  // Проверка подписки на пользователя
+  const checkFollow = (user) => {
+    const match = user.followers.some((follower) => {
+      return follower._id == jwt.user._id
+    })
+    return match
+  }
 
   // Удаление профиля
   const deleteAccount = () => {
@@ -135,45 +160,56 @@ const Profile = () => {
     }
   }
 
-  // Тултип для аватара
-  const renderTooltip = (props) => (
-    <Tooltip id="avatar-tooltip" {...props}>
-      {file ? "Change photo" : "Upload your photo"}
-    </Tooltip>
-  )
-
   return (
     <>
       <Layout>
         <Container fluid="xl">
           <Row xs={1} md={2} className="g-4">
             <Col xl={4}>
-              <Form onSubmit={handleSubmit}>
-                <Form.Group controlId="profile-photo">
-                  <Form.Label style={{ cursor: "pointer" }}>
-                    <Image
-                      src={
-                        avatar
-                          ? URL.createObjectURL(avatar)
-                          : `/avatars/${avatarFileName}`
-                      }
-                      alt="Avatar"
-                      roundedCircle
-                      style={{
-                        width: "100px",
-                        height: "100px",
-                        objectFit: "cover",
-                      }}
+              {isAuthenticated ? (
+                <Form onSubmit={handleSubmit}>
+                  <Form.Group controlId="profile-photo">
+                    <Form.Label style={{ cursor: "pointer" }}>
+                      <Image
+                        src={
+                          avatar
+                            ? URL.createObjectURL(avatar)
+                            : `/avatars/${avatarFileName}`
+                        }
+                        alt="Avatar"
+                        roundedCircle
+                        style={{
+                          width: "100px",
+                          height: "100px",
+                          objectFit: "cover",
+                        }}
+                      />
+                    </Form.Label>
+                    <Form.Control
+                      type="file"
+                      onChange={handleAvatarChange}
+                      className="d-none"
                     />
-                  </Form.Label>
-                  <Form.Control
-                    type="file"
-                    onChange={handleAvatarChange}
-                    className="d-none"
-                  />
-                </Form.Group>
-                {avatar && <Button type="submit">Загрузить</Button>}
-              </Form>
+                  </Form.Group>
+                  {avatar && <Button type="submit">Загрузить</Button>}
+                </Form>
+              ) : (
+                <Image
+                  src={
+                    avatar
+                      ? URL.createObjectURL(avatar)
+                      : `/avatars/${avatarFileName}`
+                  }
+                  alt="Avatar"
+                  roundedCircle
+                  style={{
+                    width: "100px",
+                    height: "100px",
+                    objectFit: "cover",
+                  }}
+                />
+              )}
+
               <div className="d-flex">
                 <div className="mt-2 me-1">{user.name}</div>
               </div>
@@ -188,7 +224,8 @@ const Profile = () => {
                   minute: "numeric",
                 })}
               </div>
-              {isAuthenticated && (
+              {auth.isAuthenticated().user &&
+              auth.isAuthenticated().user._id == user._id ? (
                 <Button
                   variant="outline-danger"
                   size="sm"
@@ -197,6 +234,11 @@ const Profile = () => {
                 >
                   <Trash size={16} /> Удалить аккаунт
                 </Button>
+              ) : (
+                <FollowProfileButton
+                  following={following}
+                  onButtonClick={clickFollowButton}
+                />
               )}
             </Col>
             <Col xl={8}>

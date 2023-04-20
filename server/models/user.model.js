@@ -24,7 +24,7 @@ const UserSchema = new mongoose.Schema({
   },
   avatar: {
     type: String,
-    default: "avatar-template-mx.png"
+    default: "avatar-template-mx.png",
   },
   salt: String,
   updated: Date,
@@ -32,6 +32,10 @@ const UserSchema = new mongoose.Schema({
     type: Date,
     default: Date.now,
   },
+  // На кого подписан пользователь
+  following: [{ type: mongoose.Schema.ObjectId, ref: "User" }],
+  // Подписчики пользователя
+  followers: [{ type: mongoose.Schema.ObjectId, ref: "User" }],
 })
 
 UserSchema.virtual("password")

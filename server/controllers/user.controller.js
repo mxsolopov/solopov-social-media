@@ -24,6 +24,9 @@ const list = async (req, res) => {
 const userByID = async (req, res, next, id) => {
   try {
     const user = await User.findById(id)
+      .populate("following", "_id name")
+      .populate("followers", "_id name")
+
     if (!user) {
       return res.status(400).json({
         error: "User not found",
@@ -71,4 +74,83 @@ const remove = async (req, res) => {
   }
 }
 
-export default { create, userByID, read, list, remove, update }
+const addFollowing = async (req, res, next) => {
+  try {
+    // await User.findByIdAndUpdate(req.body.userId, {
+    //   $push: { following: req.body.followId },
+    // })
+    const user = await User.findById(req.body.followId)
+    res.json(user)
+    next()
+  } catch (err) {
+    return res.status(400).json({
+      error: errorHandler.getErrorMessage(err),
+    })
+  }
+}
+
+const addFollower = async (req, res) => {
+  try {
+    let result = await User.findByIdAndUpdate(
+      req.body.followId,
+      { $push: { followers: req.body.userId } },
+      { new: true }
+    )
+      .populate("following", "_id name")
+      .populate("followers", "_id name")
+      .exec()
+    result.hashed_password = undefined
+    result.salt = undefined
+    res.json(result)
+  } catch (err) {
+    return res.status(400).json({
+      error: errorHandler.getErrorMessage(err),
+    })
+  }
+}
+
+const removeFollowing = async (req, res, next) => {
+  try {
+    await User.findByIdAndUpdate(req.body.userId, {
+      $pull: { following: req.body.unfollowId },
+    })
+    next()
+  } catch (err) {
+    return res.status(400).json({
+      error: errorHandler.getErrorMessage(err),
+    })
+  }
+}
+
+const removeFollower = async (req, res) => {
+  try {
+    let result = await User.findByIdAndUpdate(
+      req.body.unfollowId,
+      { $pull: { followers: req.body.userId } },
+      { new: true }
+    )
+      .populate("following", "_id name")
+      .populate("followers", "_id name")
+      .exec()
+    result.hashed_password = undefined
+    result.salt = undefined
+    res.json(result)
+  } catch (err) {
+    return res.status(400).json({
+      error: errorHandler.getErrorMessage(err),
+    })
+  }
+}
+
+export default {
+  create,
+  userByID,
+  read,
+  list,
+  remove,
+  update,
+  addFollowing,
+  addFollower,
+  removeFollowing,
+  removeFollower,
+}

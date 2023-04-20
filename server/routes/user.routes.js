@@ -29,14 +29,16 @@ router
   .put(upload.single("avatar"), async (req, res) => {
     // Обрабатываем загрузку аватарки, например, сохраняем имя файла в базу данных и возвращаем ответ
     const avatarFileName = req.file.filename // Имя загруженного файла аватарки
-    const userId = req.params.userId;
+    const userId = req.params.userId
     // Сохраняем имя файла в базу данных
     try {
       await User.findOneAndUpdate(
         { _id: userId }, // Условие поиска пользователя по его id
-        { avatar: avatarFileName, updated: Date.now() }, // Имя файла аватарки для обновления
+        { avatar: avatarFileName, updated: Date.now() } // Имя файла аватарки для обновления
       )
-      res.status(201).json({ success: true, avatarFileName: avatarFileName, id: userId });
+      res
+        .status(201)
+        .json({ success: true, avatarFileName: avatarFileName, id: userId })
     } catch (err) {
       return res.status(400).json({
         error: err,
@@ -51,5 +53,19 @@ router
   .delete(authCtrl.requireSignin, authCtrl.hasAuthorization, userCtrl.remove)
 
 router.param("userId", userCtrl.userByID)
+
+router
+  .route("/api/users/follow")
+  // .put(authCtrl.requireSignin, userCtrl.addFollowing, userCtrl.addFollower)
+  .put(authCtrl.requireSignin, userCtrl.addFollowing)
+
+
+router
+  .route("/api/users/unfollow")
+  .put(
+    authCtrl.requireSignin,
+    userCtrl.removeFollowing,
+    userCtrl.removeFollower
+  )
 
 export default router
