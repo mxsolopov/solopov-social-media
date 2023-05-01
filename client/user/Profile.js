@@ -40,6 +40,14 @@ const Profile = () => {
   const isAuthenticated =
     auth.isAuthenticated().user && auth.isAuthenticated().user._id == user._id
 
+  // Проверка подписки на пользователя
+  const checkFollow = (user) => {
+    const match = user.followers.some((follower) => {
+      return follower._id == jwt.user._id
+    })
+    return match
+  }
+
   // Обновление данных в профиле
   React.useEffect(() => {
     const abortController = new AbortController()
@@ -67,25 +75,20 @@ const Profile = () => {
   if (redirectToSignin) navigate("/signin")
 
   const clickFollowButton = (callApi) => {
-    callApi({
-      userId: jwt.user._id
-    }, {
-      t: jwt.token
-    }, user._id).then((data) => {
+    callApi(
+      {
+        userId: jwt.user._id,
+      },
+      {
+        t: jwt.token,
+      },
+      user._id
+    ).then((data) => {
       if (data.error) {
-        
       } else {
         setFollowing(!following)
       }
     })
-  }
-
-  // Проверка подписки на пользователя
-  const checkFollow = (user) => {
-    const match = user.followers.some((follower) => {
-      return follower._id == jwt.user._id
-    })
-    return match
   }
 
   // Удаление профиля

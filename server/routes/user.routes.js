@@ -47,18 +47,8 @@ router
   })
 
 router
-  .route("/api/users/:userId")
-  .get(authCtrl.requireSignin, userCtrl.read)
-  .put(authCtrl.requireSignin, authCtrl.hasAuthorization, userCtrl.update)
-  .delete(authCtrl.requireSignin, authCtrl.hasAuthorization, userCtrl.remove)
-
-router.param("userId", userCtrl.userByID)
-
-router
   .route("/api/users/follow")
-  // .put(authCtrl.requireSignin, userCtrl.addFollowing, userCtrl.addFollower)
-  .put(authCtrl.requireSignin, userCtrl.addFollowing)
-
+  .put(authCtrl.requireSignin, userCtrl.addFollowing, userCtrl.addFollower)
 
 router
   .route("/api/users/unfollow")
@@ -67,5 +57,13 @@ router
     userCtrl.removeFollowing,
     userCtrl.removeFollower
   )
+
+router
+  .route("/api/users/:userId")
+  .get(authCtrl.requireSignin, userCtrl.read)
+  .put(authCtrl.requireSignin, authCtrl.hasAuthorization, userCtrl.update)
+  .delete(authCtrl.requireSignin, authCtrl.hasAuthorization, userCtrl.remove)
+
+router.param("userId", userCtrl.userByID)
 
 export default router
