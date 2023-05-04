@@ -241,6 +241,7 @@ const Profile = () => {
                 <FollowProfileButton
                   following={following}
                   onButtonClick={clickFollowButton}
+                  classes="mt-3"
                 />
               )}
             </Col>

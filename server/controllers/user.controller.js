@@ -79,11 +79,8 @@ const addFollowing = async (req, res, next) => {
     await User.findByIdAndUpdate(req.body.userId, {
       $push: { following: req.body.followId },
     })
-    const user = await User.findById(req.body.followId)
-    res.json(user)
     next()
   } catch (err) {
-    console.log(err);
     return res.status(400).json({
       error: errorHandler.getErrorMessage(err),
     })
@@ -122,7 +119,6 @@ const removeFollowing = async (req, res, next) => {
     })
   }
 }
-
 const removeFollower = async (req, res) => {
   try {
     let result = await User.findByIdAndUpdate(
