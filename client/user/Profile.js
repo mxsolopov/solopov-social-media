@@ -7,14 +7,17 @@ import {
   Button,
   Form,
   Modal,
+  Tabs,
+  Tab,
 } from "react-bootstrap"
 import auth from "../auth/auth-helper"
-import { read, update, remove } from "./api-user"
+import { read, update, remove, list } from "./api-user"
 import { useNavigate } from "react-router"
 import { useParams } from "react-router-dom"
 import Layout from "../core/Layout"
 import { Trash, PencilSimple, FloppyDisk } from "phosphor-react"
 import FollowProfileButton from "./FollowProfileButton"
+import FollowGrid from "./FollowGrid"
 
 const Profile = () => {
   const { userId } = useParams()
@@ -22,6 +25,9 @@ const Profile = () => {
   const [following, setFollowing] = React.useState(false)
   const [redirectToSignin, setRedirectToSignin] = React.useState(false)
   const navigate = useNavigate()
+  // На кого подписан и подписчики пользователя
+  const [followingUsers, setFollowingUsers] = React.useState([])
+  const [followersUsers, setFollowersUsers] = React.useState([])
   // Состояние редактирования полей профиля
   const [edit, setEdit] = React.useState(false)
   // Поля профиля
@@ -52,6 +58,8 @@ const Profile = () => {
   React.useEffect(() => {
     const abortController = new AbortController()
     const signal = abortController.signal
+
+    // Чтение данных для профиля пользователя
     read({ userId: userId }, { t: jwt.token }, signal).then((data) => {
       if (data && data.error) {
         setRedirectToSignin(true)
@@ -64,6 +72,24 @@ const Profile = () => {
         setAbout(data.about)
         setAvatarFileName(data.avatar)
         setPassword("")
+
+        // Отображение данных о тех, на кого подписан
+        list(signal).then((data2) => {
+          if (data2 && data2.error) {
+            console.log(data2.error)
+          } else {
+            setFollowingUsers(
+              data2.filter((user) =>
+                data.following.map((item) => item._id).includes(user._id)
+              )
+            )
+            setFollowersUsers(
+              data2.filter((user) =>
+                data.followers.map((item) => item._id).includes(user._id)
+              )
+            )
+          }
+        })
       }
     })
 
@@ -343,6 +369,26 @@ const Profile = () => {
               )}
             </Col>
           </Row>
+          <div className="mt-5">
+            <Row>
+              <Tabs
+                defaultActiveKey="profile"
+                id="justify-tab-example"
+                className="mb-3"
+                justify
+              >
+                <Tab eventKey="home" title="Посты">
+                  1
+                </Tab>
+                <Tab eventKey="profile" title="Подписан">
+                  <FollowGrid followUsers={followingUsers} />
+                </Tab>
+                <Tab eventKey="longer-tab" title="Подписчики">
+                  <FollowGrid followUsers={followersUsers} />
+                </Tab>
+              </Tabs>
+            </Row>
+          </div>
         </Container>
       </Layout>
       <Modal show={deleteModal} onHide={() => setDeleteModal(false)}>

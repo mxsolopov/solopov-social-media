@@ -1,5 +1,6 @@
 import React from "react"
 import { Container, Navbar, Button, Stack } from "react-bootstrap"
+import { SignOut } from "phosphor-react"
 import logo from "../assets/images/logo.svg"
 import { useNavigate } from "react-router-dom"
 import auth from "../auth/auth-helper"
@@ -44,12 +45,14 @@ const Layout = ({ children }) => {
             className="justify-content-end"
           >
             <Stack direction="horizontal" gap={3} className="mt-3 mt-sm-0">
-              <Button
-                variant="outline-light"
-                onClick={() => navigate("/users")}
-              >
-                Пользователи
-              </Button>{" "}
+              {isAuthenticated && (
+                <Button
+                  variant="outline-light"
+                  onClick={() => navigate("/users")}
+                >
+                  Пользователи
+                </Button>
+              )}{" "}
               {isAuthenticated ? (
                 <>
                   <Button
@@ -66,7 +69,7 @@ const Layout = ({ children }) => {
                       auth.clearJWT(() => navigate("/"))
                     }}
                   >
-                    Выйти
+                    <SignOut size={16} />
                   </Button>
                 </>
               ) : (

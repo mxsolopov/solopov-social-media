@@ -13,9 +13,9 @@ export default function FollowProfileButton(props) {
   return (
     <div>
       {props.following ? (
-        <Button className={props.classes} onClick={unfollowClick}>Unfollow</Button>
+        <Button size="sm" className={props.classes} onClick={unfollowClick}>Отписаться</Button>
       ) : (
-        <Button className={props.classes} onClick={followClick}>Follow</Button>
+        <Button size="sm" className={props.classes} onClick={followClick}>Подписаться</Button>
       )}
     </div>
   )

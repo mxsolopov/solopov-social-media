@@ -1,5 +1,6 @@
 import React from "react"
 import { Container, ListGroup, Button, Image } from "react-bootstrap"
+import { ArrowRight } from "phosphor-react"
 import Layout from "../core/Layout"
 import { list } from "./api-user.js"
 import { useNavigate } from "react-router"
@@ -7,7 +8,6 @@ import { useNavigate } from "react-router"
 const Users = () => {
   const [users, setUsers] = React.useState([])
   const navigate = useNavigate()
-  console.log(users);
 
   React.useEffect(() => {
     const abortController = new AbortController()
@@ -49,9 +49,18 @@ const Users = () => {
                 <div className="ms-2 me-auto fw-bold">{user.name}</div>
                 <Button
                   variant="primary"
+                  size="sm"
+                  onClick={() => console.log("Подписаться")}
+                >
+                  Подписаться
+                </Button>
+                <Button
+                  variant="outline-secondary"
+                  size="sm"
+                  className="mx-2"
                   onClick={() => navigate("/user/" + user._id)}
                 >
-                  Подробнее
+                  <ArrowRight size={16} />
                 </Button>
               </ListGroup.Item>
             )
