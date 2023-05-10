@@ -13,7 +13,7 @@ const create = async (req, res) => {
 }
 const list = async (req, res) => {
   try {
-    const users = await User.find().select("name email updated avatar created")
+    const users = await User.find().select("name email updated avatar created followers following")
     res.json(users)
   } catch (err) {
     return res.status(400).json({

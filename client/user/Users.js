@@ -1,13 +1,14 @@
 import React from "react"
 import { Container, ListGroup, Button, Image } from "react-bootstrap"
-import { ArrowRight } from "phosphor-react"
 import Layout from "../core/Layout"
 import { list } from "./api-user.js"
-import { useNavigate } from "react-router"
+import UserListItem from "./UserListItem"
+import auth from "../auth/auth-helper"
 
 const Users = () => {
   const [users, setUsers] = React.useState([])
-  const navigate = useNavigate()
+  // id авторизованного пользователя
+  const id = auth.isAuthenticated().user._id
 
   React.useEffect(() => {
     const abortController = new AbortController()
@@ -29,41 +30,10 @@ const Users = () => {
   return (
     <Layout>
       <Container fluid="xl">
-        <ListGroup as="ol">
-          {users.map((user, i) => {
-            return (
-              <ListGroup.Item
-                as="li"
-                key={i}
-                className="d-flex justify-content-between align-items-center"
-              >
-                <Image
-                  src={`/avatars/${user.avatar}`}
-                  rounded
-                  style={{
-                    width: "40px",
-                    height: "40px",
-                    objectFit: "cover",
-                  }}
-                />
-                <div className="ms-2 me-auto fw-bold">{user.name}</div>
-                <Button
-                  variant="primary"
-                  size="sm"
-                  onClick={() => console.log("Подписаться")}
-                >
-                  Подписаться
-                </Button>
-                <Button
-                  variant="outline-secondary"
-                  size="sm"
-                  className="mx-2"
-                  onClick={() => navigate("/user/" + user._id)}
-                >
-                  <ArrowRight size={16} />
-                </Button>
-              </ListGroup.Item>
-            )
+        <h1>Пользователи</h1>
+        <ListGroup as="ol" className="mt-4">
+          {users.filter(user => user._id !== id).map((user, i) => {
+            return <UserListItem key={i} user={user} iterator={i} />
           })}
         </ListGroup>
       </Container>
