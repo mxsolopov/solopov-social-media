@@ -4,6 +4,7 @@ import { SignOut } from "phosphor-react"
 import logo from "../assets/images/logo.svg"
 import { useNavigate } from "react-router-dom"
 import auth from "../auth/auth-helper"
+import { useMediaQuery } from "react-responsive"
 
 const Layout = ({ children }) => {
   const isAuthenticated = auth.isAuthenticated()
@@ -18,6 +19,7 @@ const Layout = ({ children }) => {
         footerRef.current.offsetHeight
     )
   }, [])
+  const isMobile = useMediaQuery({ maxWidth: 600 })
 
   return (
     <>
@@ -44,7 +46,11 @@ const Layout = ({ children }) => {
             id="basic-navbar-nav"
             className="justify-content-end"
           >
-            <Stack direction="horizontal" gap={3} className="mt-3 mt-sm-0">
+            <Stack
+              direction={isMobile ? "vertical" : "horizontal"}
+              gap={3}
+              className="mt-3 mt-sm-0"
+            >
               {isAuthenticated && (
                 <Button
                   variant="outline-light"
@@ -69,7 +75,7 @@ const Layout = ({ children }) => {
                       auth.clearJWT(() => navigate("/"))
                     }}
                   >
-                    <SignOut size={16} />
+                    {isMobile ? "Выйти" : <SignOut size={16} />}
                   </Button>
                 </>
               ) : (
