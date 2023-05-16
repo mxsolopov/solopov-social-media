@@ -7,6 +7,7 @@ import helmet from "helmet"
 
 import userRoutes from "./routes/user.routes"
 import authRoutes from "./routes/auth.routes"
+import postRoutes from "./routes/post.routes"
 
 const app = express()
 
@@ -21,6 +22,7 @@ app.use(cors())
 
 app.use("/", jsonParser, userRoutes)
 app.use("/", jsonParser, authRoutes)
+app.use("/", jsonParser, postRoutes)
 
 app.use((err, req, res, next) => {
   if (err.name === "UnauthorizedError") {

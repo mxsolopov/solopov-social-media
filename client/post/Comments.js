@@ -1,5 +1,6 @@
 import React from "react"
 import { Form, Button, Card } from "react-bootstrap"
+import { ThumbsDown, ThumbsUp } from "phosphor-react"
 
 const Comments = () => {
   const [showReplyForm, setShowReplyForm] = React.useState(false)
@@ -13,9 +14,13 @@ const Comments = () => {
             <Card.Title>Имя</Card.Title>
             <Card.Subtitle className="mb-2 text-muted">date</Card.Subtitle>
             <Card.Text>Комментарий</Card.Text>
-            <Button variant="primary">👍</Button>{" "}
-            <Button variant="secondary">👎</Button>{" "}
-            <Button onClick={() => setShowReplyForm(!showReplyForm)}>
+            <Button variant="outline-success">
+              <ThumbsUp size={16} style={{ transform: "translateY(-2px)" }} />
+            </Button>{" "}
+            <Button variant="outline-danger">
+              <ThumbsDown size={16} style={{ transform: "translateY(-2px)" }} />
+            </Button>{" "}
+            <Button variant="link" style={{textDecoration: "none"}} onClick={() => setShowReplyForm(!showReplyForm)}>
               Ответить
             </Button>
             {showReplyForm && (

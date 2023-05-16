@@ -75,7 +75,7 @@ const Layout = ({ children }) => {
                       auth.clearJWT(() => navigate("/"))
                     }}
                   >
-                    {isMobile ? "Выйти" : <SignOut size={16} />}
+                    {isMobile ? "Выйти" : <SignOut size={16} style={{transform: "translateY(-2px)"}} />}
                   </Button>
                 </>
               ) : (

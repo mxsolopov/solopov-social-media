@@ -1,13 +1,17 @@
 import mongoose from "mongoose"
 const PostSchema = new mongoose.Schema({
+  title: {
+    type: String,
+    required: "Title is required",
+  },
   text: {
     type: String,
     required: "Text is required",
   },
-  photo: {
-    data: Buffer,
-    contentType: String,
-  },
+  // photo: {
+  //   data: Buffer,
+  //   contentType: String,
+  // },
   likes: [{ type: mongoose.Schema.ObjectId, ref: "User" }],
   comments: [
     {
