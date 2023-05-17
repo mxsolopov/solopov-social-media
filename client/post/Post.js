@@ -1,9 +1,10 @@
 import React from "react"
 import { Card, Button, Form } from "react-bootstrap"
-import Comments from "./Comments"
+import CommentList from "./CommentList"
 import { ThumbsDown, ThumbsUp } from "phosphor-react"
+import CommentForm from "./CommentForm"
 
-const Post = ({ post }) => {
+const Post = ({ post, postId, addComment }) => {
   const formatDateToLocal = (dateString) => {
     const date = new Date(dateString)
 
@@ -34,23 +35,10 @@ const Post = ({ post }) => {
           <ThumbsDown size={16} style={{ transform: "translateY(-2px)" }} />
         </Button>
         <hr />
-        <Comments />
+        <CommentList comments={post.comments} formatDateToLocal={formatDateToLocal} />
       </Card.Body>
       <Card.Footer>
-        <Form>
-          <Form.Group controlId="formComment">
-            <Form.Label>Добавить комментарий</Form.Label>
-            <Form.Control
-              as="textarea"
-              rows={3}
-              // value={1}
-              // onChange={console.log(1)}
-            />
-          </Form.Group>
-          <Button variant="primary" type="submit" className="mt-3">
-            Отправить
-          </Button>
-        </Form>
+        <CommentForm postId={postId} addComment={addComment}/>
       </Card.Footer>
     </Card>
   )

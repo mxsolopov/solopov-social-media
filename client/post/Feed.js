@@ -38,10 +38,21 @@ const Feed = () => {
     setPosts(updatedPosts)
   }
 
+  const addComment = (postId, comment) => {
+    const updatedPosts = posts.map((post) => {
+      if (post._id === postId) {
+        const updatedComments = [...post.comments, comment]
+        return { ...post, comments: updatedComments }
+      }
+      return post
+    })
+    setPosts(updatedPosts)
+  }
+
   return (
     <>
       <PostForm addPost={addPost} />
-      <PostList posts={posts} />
+      <PostList posts={posts} addComment={addComment} />
     </>
   )
 }

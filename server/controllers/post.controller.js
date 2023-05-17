@@ -6,7 +6,7 @@ const create = async (req, res) => {
   const post = new Post(req.body)
   try {
     await post.save()
-    return res.status(200).json({ message: "Successfully post added" })
+    return res.status(200).json(post)
   } catch (err) {
     return res.status(400).json({ error: errorHandler.getErrorMessage(err) })
   }
@@ -24,7 +24,30 @@ const listNewsFeed = async (req, res) => {
       .populate("postedBy", "_id name")
       .sort("-created")
       .exec()
-    res.json(posts)
+    res.status(200).json(posts)
+  } catch (err) {
+    return res.status(400).json({
+      error: errorHandler.getErrorMessage(err),
+    })
+  }
+}
+
+const comment = async (req, res) => {
+  try {
+    const postId = req.body.postId
+    const comment = req.body.comment
+
+    const updatedPost = await Post.findByIdAndUpdate(
+      postId,
+      { $push: { comments: comment } },
+      { new: true }
+    )
+
+    if (!updatedPost) {
+      return res.status(404).json({ error: "Post not found" })
+    }
+
+    res.status(200).json(updatedPost)
   } catch (err) {
     return res.status(400).json({
       error: errorHandler.getErrorMessage(err),
@@ -35,4 +58,5 @@ const listNewsFeed = async (req, res) => {
 export default {
   create,
   listNewsFeed,
+  comment,
 }

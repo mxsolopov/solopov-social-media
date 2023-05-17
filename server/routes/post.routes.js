@@ -13,4 +13,6 @@ router
   .route("/api/posts/feed/:userId")
   .get(authCtrl.requireSignin, postCtrl.listNewsFeed)
 
+router.route("/api/posts/comment").put(authCtrl.requireSignin, postCtrl.comment)
+
 export default router
