@@ -23,7 +23,8 @@ const PostForm = ({ addPost }) => {
       postedBy: values.user,
       created: Date.now(),
       comments: [],
-      likes: []
+      likes: [],
+      dislikes: [],
     }
     create(
       {
@@ -37,7 +38,7 @@ const PostForm = ({ addPost }) => {
       if (data.error) {
         setValues({ ...values, error: data.error })
       } else {
-        addPost({...postData, _id: data._id})
+        addPost({ ...postData, _id: data._id })
         setValues({ ...values, title: "", text: "" })
       }
     })

@@ -53,4 +53,80 @@ const comment = async (params, credentials, postId, comment) => {
   }
 }
 
-export { create, listNewsFeed, comment }
+const like = async (params, credentials, postId) => {
+  try {
+    let response = await fetch("/api/posts/like/", {
+      method: "PUT",
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+        Authorization: "Bearer " + credentials.t,
+      },
+      body: JSON.stringify({ userId: params.userId, postId: postId }),
+    })
+    return await response.json()
+  } catch (err) {
+    console.log(err)
+  }
+}
+
+const removelike = async (params, credentials, postId) => {
+  try {
+    let response = await fetch("/api/posts/removelike/", {
+      method: "PUT",
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+        Authorization: "Bearer " + credentials.t,
+      },
+      body: JSON.stringify({ userId: params.userId, postId: postId }),
+    })
+    return await response.json()
+  } catch (err) {
+    console.log(err)
+  }
+}
+
+const dislike = async (params, credentials, postId) => {
+  try {
+    let response = await fetch("/api/posts/dislike/", {
+      method: "PUT",
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+        Authorization: "Bearer " + credentials.t,
+      },
+      body: JSON.stringify({ userId: params.userId, postId: postId }),
+    })
+    return await response.json()
+  } catch (err) {
+    console.log(err)
+  }
+}
+
+const removedislike = async (params, credentials, postId) => {
+  try {
+    let response = await fetch("/api/posts/removedislike/", {
+      method: "PUT",
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+        Authorization: "Bearer " + credentials.t,
+      },
+      body: JSON.stringify({ userId: params.userId, postId: postId }),
+    })
+    return await response.json()
+  } catch (err) {
+    console.log(err)
+  }
+}
+
+export {
+  create,
+  listNewsFeed,
+  comment,
+  like,
+  removelike,
+  dislike,
+  removedislike,
+}

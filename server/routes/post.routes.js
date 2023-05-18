@@ -15,4 +15,14 @@ router
 
 router.route("/api/posts/comment").put(authCtrl.requireSignin, postCtrl.comment)
 
+router.route("/api/posts/like").put(authCtrl.requireSignin, postCtrl.like)
+router
+  .route("/api/posts/removelike")
+  .put(authCtrl.requireSignin, postCtrl.removelike)
+
+router.route("/api/posts/dislike").put(authCtrl.requireSignin, postCtrl.dislike)
+router
+  .route("/api/posts/removedislike")
+  .put(authCtrl.requireSignin, postCtrl.removedislike)
+
 export default router

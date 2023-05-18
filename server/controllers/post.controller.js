@@ -55,8 +55,72 @@ const comment = async (req, res) => {
   }
 }
 
+const like = async (req, res) => {
+  try {
+    let result = await Post.findByIdAndUpdate(
+      req.body.postId,
+      { $push: { likes: req.body.userId } },
+      { new: true }
+    )
+    res.json(result)
+  } catch (err) {
+    return res.status(400).json({
+      error: errorHandler.getErrorMessage(err),
+    })
+  }
+}
+
+const removelike = async (req, res) => {
+  try {
+    let result = await Post.findByIdAndUpdate(
+      req.body.postId,
+      { $pull: { likes: req.body.userId } },
+      { new: true }
+    )
+    res.json(result)
+  } catch (err) {
+    return res.status(400).json({
+      error: errorHandler.getErrorMessage(err),
+    })
+  }
+}
+
+const dislike = async (req, res) => {
+  try {
+    let result = await Post.findByIdAndUpdate(
+      req.body.postId,
+      { $push: { dislikes: req.body.userId } },
+      { new: true }
+    )
+    res.json(result)
+  } catch (err) {
+    return res.status(400).json({
+      error: errorHandler.getErrorMessage(err),
+    })
+  }
+}
+
+const removedislike = async (req, res) => {
+  try {
+    let result = await Post.findByIdAndUpdate(
+      req.body.postId,
+      { $pull: { dislikes: req.body.userId } },
+      { new: true }
+    )
+    res.json(result)
+  } catch (err) {
+    return res.status(400).json({
+      error: errorHandler.getErrorMessage(err),
+    })
+  }
+}
+
 export default {
   create,
   listNewsFeed,
   comment,
+  like,
+  removelike,
+  dislike,
+  removedislike,
 }

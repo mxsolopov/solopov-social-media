@@ -13,6 +13,7 @@ const PostSchema = new mongoose.Schema({
   //   contentType: String,
   // },
   likes: [{ type: mongoose.Schema.ObjectId, ref: "User" }],
+  dislikes: [{ type: mongoose.Schema.ObjectId, ref: "User" }],
   comments: [
     {
       text: {
