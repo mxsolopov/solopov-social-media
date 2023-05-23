@@ -1,5 +1,5 @@
 import React from "react"
-import { Card, Button, Form } from "react-bootstrap"
+import { Card, Button, Image } from "react-bootstrap"
 import CommentList from "./CommentList"
 import { ThumbsDown, ThumbsUp } from "phosphor-react"
 import CommentForm from "./CommentForm"
@@ -8,7 +8,6 @@ import auth from "../auth/auth-helper"
 
 const Post = ({ post, postId, addComment }) => {
   const jwt = auth.isAuthenticated()
-
   const [values, setValues] = React.useState({
     like: post.likes.includes(jwt.user._id) ? true : false,
     likes: post.likes.length,
@@ -29,95 +28,108 @@ const Post = ({ post, postId, addComment }) => {
   }
 
   const upRate = () => {
-    let callApi = values.like ? removelike : like
-    callApi(
-      {
-        userId: jwt.user._id,
-      },
-      {
-        t: jwt.token,
-      },
-      postId
-    ).then((data) => {
-      if (data.error) {
-        console.log(data.error)
-      } else {
-        setValues({ ...values, like: !values.like, likes: data.likes.length })
-        values.dislike &&
-          removedislike(
-            {
-              userId: jwt.user._id,
-            },
-            {
-              t: jwt.token,
-            },
-            postId
-          ).then((data) => {
-            if (data.error) {
-              console.log(data.error)
-            } else {
-              setValues({
-                like: true,
-                likes: data.likes.length,
-                dislike: false,
-                dislikes: data.dislikes.length,
-              })
-            }
-          })
-      }
-    })
+    // let callApi = values.like ? removelike : like
+    // callApi(
+    //   {
+    //     userId: jwt.user._id,
+    //   },
+    //   {
+    //     t: jwt.token,
+    //   },
+    //   postId
+    // ).then((data) => {
+    //   if (data.error) {
+    //     console.log(data.error)
+    //   } else {
+    //     setValues({ ...values, like: !values.like, likes: data.likes.length })
+    //     values.dislike &&
+    //       removedislike(
+    //         {
+    //           userId: jwt.user._id,
+    //         },
+    //         {
+    //           t: jwt.token,
+    //         },
+    //         postId
+    //       ).then((data) => {
+    //         if (data.error) {
+    //           console.log(data.error)
+    //         } else {
+    //           setValues({
+    //             like: true,
+    //             likes: data.likes.length,
+    //             dislike: false,
+    //             dislikes: data.dislikes.length,
+    //           })
+    //         }
+    //       })
+    //   }
+    // })
   }
 
   const downRate = () => {
-    let callApi = values.dislike ? removedislike : dislike
-    callApi(
-      {
-        userId: jwt.user._id,
-      },
-      {
-        t: jwt.token,
-      },
-      postId
-    ).then((data) => {
-      if (data.error) {
-        console.log(data.error)
-      } else {
-        setValues({
-          ...values,
-          dislike: !values.dislike,
-          dislikes: data.dislikes.length,
-        })
-        values.like &&
-          removelike(
-            {
-              userId: jwt.user._id,
-            },
-            {
-              t: jwt.token,
-            },
-            postId
-          ).then((data) => {
-            if (data.error) {
-              console.log(data.error)
-            } else {
-              setValues({
-                like: false,
-                likes: data.likes.length,
-                dislike: true,
-                dislikes: data.dislikes.length,
-              })
-            }
-          })
-      }
-    })
+    // let callApi = values.dislike ? removedislike : dislike
+    // callApi(
+    //   {
+    //     userId: jwt.user._id,
+    //   },
+    //   {
+    //     t: jwt.token,
+    //   },
+    //   postId
+    // ).then((data) => {
+    //   if (data.error) {
+    //     console.log(data.error)
+    //   } else {
+    //     setValues({
+    //       ...values,
+    //       dislike: !values.dislike,
+    //       dislikes: data.dislikes.length,
+    //     })
+    //     values.like &&
+    //       removelike(
+    //         {
+    //           userId: jwt.user._id,
+    //         },
+    //         {
+    //           t: jwt.token,
+    //         },
+    //         postId
+    //       ).then((data) => {
+    //         if (data.error) {
+    //           console.log(data.error)
+    //         } else {
+    //           setValues({
+    //             like: false,
+    //             likes: data.likes.length,
+    //             dislike: true,
+    //             dislikes: data.dislikes.length,
+    //           })
+    //         }
+    //       })
+    //   }
+    // })
   }
 
   return (
     <Card className="mb-4">
       <Card.Header>
-        <div style={{ fontSize: "14px" }}>{post.postedBy.name}</div>
-        <div style={{ fontSize: "12px" }} className="text-muted">
-          {formatDateToLocal(post.created)}
+        <div className="d-flex align-items-center gap-2">
+          <Image
+            src={`/avatars/avatar-template-mx.png`}
+            rounded
+            style={{
+              width: "50px",
+              height: "50px",
+              objectFit: "cover",
+            }}
+          />
+          <div>
+            <div style={{ fontSize: "14px" }}>{post.postedBy.name}</div>
+            <div style={{ fontSize: "12px" }} className="text-muted">
+              {formatDateToLocal(post.created)}
+            </div>
+          </div>
         </div>
       </Card.Header>
       <Card.Body>
