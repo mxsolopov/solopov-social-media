@@ -6,14 +6,11 @@ import CommentForm from "./CommentForm"
 import { like, removelike, dislike, removedislike } from "./api-post"
 import auth from "../auth/auth-helper"
 
-const Post = ({ post, postId, addComment }) => {
+const Post = ({ post, postId, addComment, updatePost }) => {
   const jwt = auth.isAuthenticated()
-  const [values, setValues] = React.useState({
-    like: post.likes.includes(jwt.user._id) ? true : false,
-    likes: post.likes.length,
-    dislike: post.dislikes.includes(jwt.user._id) ? true : false,
-    dislikes: post.dislikes.length,
-  })
+  const userId = jwt.user._id
+  const isDislike = post.dislikes.includes(userId)
+  const isLike = post.likes.includes(userId)
 
   const formatDateToLocal = (dateString) => {
     const date = new Date(dateString)
@@ -28,87 +25,61 @@ const Post = ({ post, postId, addComment }) => {
   }
 
   const upRate = () => {
-    // let callApi = values.like ? removelike : like
-    // callApi(
-    //   {
-    //     userId: jwt.user._id,
-    //   },
-    //   {
-    //     t: jwt.token,
-    //   },
-    //   postId
-    // ).then((data) => {
-    //   if (data.error) {
-    //     console.log(data.error)
-    //   } else {
-    //     setValues({ ...values, like: !values.like, likes: data.likes.length })
-    //     values.dislike &&
-    //       removedislike(
-    //         {
-    //           userId: jwt.user._id,
-    //         },
-    //         {
-    //           t: jwt.token,
-    //         },
-    //         postId
-    //       ).then((data) => {
-    //         if (data.error) {
-    //           console.log(data.error)
-    //         } else {
-    //           setValues({
-    //             like: true,
-    //             likes: data.likes.length,
-    //             dislike: false,
-    //             dislikes: data.dislikes.length,
-    //           })
-    //         }
-    //       })
-    //   }
-    // })
+    let callApi = isLike ? removelike : like
+    callApi(
+      {
+        userId: userId,
+      },
+      {
+        t: jwt.token,
+      },
+      postId
+    ).then((data) => {
+      if (data.error) {
+        console.log(data.error)
+      } else {
+        if (isLike) {
+          // убрать лайк
+          updatePost(post._id, {
+            likes: post.likes.filter((item) => {
+              return item !== userId
+            }),
+          })
+        } else {
+          // добавить лайк
+          updatePost(post._id, { likes: [...post.likes, userId] })
+        }
+      }
+    })
   }
 
   const downRate = () => {
-    // let callApi = values.dislike ? removedislike : dislike
-    // callApi(
-    //   {
-    //     userId: jwt.user._id,
-    //   },
-    //   {
-    //     t: jwt.token,
-    //   },
-    //   postId
-    // ).then((data) => {
-    //   if (data.error) {
-    //     console.log(data.error)
-    //   } else {
-    //     setValues({
-    //       ...values,
-    //       dislike: !values.dislike,
-    //       dislikes: data.dislikes.length,
-    //     })
-    //     values.like &&
-    //       removelike(
-    //         {
-    //           userId: jwt.user._id,
-    //         },
-    //         {
-    //           t: jwt.token,
-    //         },
-    //         postId
-    //       ).then((data) => {
-    //         if (data.error) {
-    //           console.log(data.error)
-    //         } else {
-    //           setValues({
-    //             like: false,
-    //             likes: data.likes.length,
-    //             dislike: true,
-    //             dislikes: data.dislikes.length,
-    //           })
-    //         }
-    //       })
-    //   }
-    // })
+    let callApi = isDislike ? removedislike : dislike
+    callApi(
+      {
+        userId: userId,
+      },
+      {
+        t: jwt.token,
+      },
+      postId
+    ).then((data) => {
+      if (data.error) {
+        console.log(data.error)
+      } else {
+        if (isDislike) {
+          // убрать дизлайк
+          updatePost(post._id, {
+            dislikes: post.dislikes.filter((item) => {
+              return item !== userId
+            }),
+          })
+        } else {
+          // добавить дизлайк
+          updatePost(post._id, { dislikes: [...post.dislikes, userId] })
+        }
+      }
+    })
   }
 
   return (
@@ -136,17 +107,17 @@ const Post = ({ post, postId, addComment }) => {
         <h3 style={{ fontSize: "18px", fontWeight: 500 }}>{post.title}</h3>
         <Card.Text>{post.text}</Card.Text>
         <Button
-          variant={values.like ? "success" : "outline-success"}
+          variant={isLike ? "success" : "outline-success"}
           onClick={upRate}
         >
-          {values.likes > 0 ? values.likes + " " : ""}
+          {post.likes.length > 0 ? post.likes.length + " " : ""}
           <ThumbsUp size={16} style={{ transform: "translateY(-2px)" }} />
         </Button>{" "}
         <Button
-          variant={values.dislike ? "danger" : "outline-danger"}
+          variant={isDislike ? "danger" : "outline-danger"}
           onClick={downRate}
         >
-          {values.dislikes > 0 ? values.dislikes + " " : ""}
+          {post.dislikes.length > 0 ? post.dislikes.length + " " : ""}
           <ThumbsDown size={16} style={{ transform: "translateY(-2px)" }} />
         </Button>
         <hr />
