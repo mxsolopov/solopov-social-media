@@ -5,12 +5,14 @@ import { ThumbsDown, ThumbsUp } from "phosphor-react"
 import CommentForm from "./CommentForm"
 import { like, removelike, dislike, removedislike } from "./api-post"
 import auth from "../auth/auth-helper"
+import { read } from "../user/api-user"
 
 const Post = ({ post, postId, addComment, updatePost }) => {
   const jwt = auth.isAuthenticated()
   const userId = jwt.user._id
   const isDislike = post.dislikes.includes(userId)
   const isLike = post.likes.includes(userId)
+  const [user, setUser] = React.useState({})
 
   const formatDateToLocal = (dateString) => {
     const date = new Date(dateString)
@@ -23,6 +25,24 @@ const Post = ({ post, postId, addComment, updatePost }) => {
 
     return `${day}.${month}.${year} ${hours}:${minutes}`
   }
+
+  React.useEffect(() => {
+    const abortController = new AbortController()
+    const signal = abortController.signal
+
+    // Чтение данных для профиля пользователя
+    read({ userId: userId }, { t: jwt.token }, signal).then((data) => {
+      if (data && data.error) {
+        console.log(data.error)
+      } else {
+        setUser(data)
+      }
+    })
+
+    return function cleanup() {
+      abortController.abort()
+    }
+  }, [])
 
   const upRate = () => {
     let callApi = isLike ? removelike : like
@@ -47,10 +67,33 @@ const Post = ({ post, postId, addComment, updatePost }) => {
           })
         } else {
           // добавить лайк
-          updatePost(post._id, { likes: [...post.likes, userId] })
+          updatePost(post._id, {
+            likes: [...post.likes, userId],
+            dislikes: isDislike
+              ? post.dislikes.filter((item) => {
+                  return item !== userId
+                })
+              : post.dislikes,
+          })
         }
       }
     })
+
+    isDislike &&
+      removedislike(
+        {
+          userId: userId,
+        },
+        {
+          t: jwt.token,
+        },
+        postId
+      ).then((data) => {
+        if (data.error) {
+          console.log(data.error)
+        } else {
+        }
+      })
   }
 
   const downRate = () => {
@@ -76,10 +119,33 @@ const Post = ({ post, postId, addComment, updatePost }) => {
           })
         } else {
           // добавить дизлайк
-          updatePost(post._id, { dislikes: [...post.dislikes, userId] })
+          updatePost(post._id, {
+            dislikes: [...post.dislikes, userId],
+            likes: isLike
+              ? post.likes.filter((item) => {
+                  return item !== userId
+                })
+              : post.likes,
+          })
         }
       }
     })
+
+    isLike &&
+      removelike(
+        {
+          userId: userId,
+        },
+        {
+          t: jwt.token,
+        },
+        postId
+      ).then((data) => {
+        if (data.error) {
+          console.log(data.error)
+        } else {
+        }
+      })
   }
 
   return (
@@ -87,8 +153,8 @@ const Post = ({ post, postId, addComment, updatePost }) => {
       <Card.Header>
         <div className="d-flex align-items-center gap-2">
           <Image
-            src={`/avatars/avatar-template-mx.png`}
-            rounded
+            src={`/avatars/${user.avatar || "avatar-template-mx.png"}`}
+            roundedCircle
             style={{
               width: "50px",
               height: "50px",
