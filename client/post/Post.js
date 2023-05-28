@@ -31,7 +31,7 @@ const Post = ({ post, postId, addComment, updatePost }) => {
     const signal = abortController.signal
 
     // Чтение данных для профиля пользователя
-    read({ userId: userId }, { t: jwt.token }, signal).then((data) => {
+    read({ userId: post.postedBy._id }, { t: jwt.token }, signal).then((data) => {
       if (data && data.error) {
         console.log(data.error)
       } else {
