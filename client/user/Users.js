@@ -10,6 +10,8 @@ const Users = () => {
   // id авторизованного пользователя
   const id = auth.isAuthenticated().user._id
 
+  console.log(auth.isAuthenticated())
+
   React.useEffect(() => {
     const abortController = new AbortController()
     const signal = abortController.signal

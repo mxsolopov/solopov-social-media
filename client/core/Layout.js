@@ -72,10 +72,20 @@ const Layout = ({ children }) => {
                   <Button
                     variant="secondary"
                     onClick={() => {
-                      auth.clearJWT(() => navigate("/"))
+                      auth.clearJWT(() => {
+                        navigate("/")
+                        window.location.reload()
+                      })
                     }}
                   >
-                    {isMobile ? "Выйти" : <SignOut size={16} style={{transform: "translateY(-2px)"}} />}
+                    {isMobile ? (
+                      "Выйти"
+                    ) : (
+                      <SignOut
+                        size={16}
+                        style={{ transform: "translateY(-2px)" }}
+                      />
+                    )}
                   </Button>
                 </>
               ) : (
@@ -95,7 +105,7 @@ const Layout = ({ children }) => {
           </Navbar.Collapse>
         </Container>
       </Navbar>
-      <main className="py-5" style={{ minHeight: contentMinHeight + "px" }}>
+      <main className="d-flex py-5" style={{ minHeight: contentMinHeight + "px" }}>
         {children}
       </main>
       <footer className="bg-light text-center text-lg-start" ref={footerRef}>

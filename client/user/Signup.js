@@ -9,7 +9,7 @@ import {
   Modal,
 } from "react-bootstrap"
 import Layout from "../core/Layout"
-import template from "../assets/images/template.png"
+import registration from "../assets/images/registration.svg"
 import { create } from "./api-user.js"
 import { useNavigate } from "react-router"
 
@@ -54,10 +54,10 @@ const Signup = () => {
   return (
     <>
       <Layout>
-        <Container>
+        <Container className="align-self-center">
           <Row xs={1} md={2} className="align-items-center">
             <Col>
-              <Image src={template} className="w-100" />
+              <Image src={registration} className="w-100" />
             </Col>
             <Col>
               <h1 className="mb-4 text-center mt-4 mt-md-0">Регистрация</h1>

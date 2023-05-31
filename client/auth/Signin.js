@@ -1,15 +1,7 @@
 import React from "react"
-import {
-  Container,
-  Form,
-  Button,
-  Row,
-  Col,
-  Image,
-  Modal,
-} from "react-bootstrap"
+import { Container, Form, Button, Row, Col, Image } from "react-bootstrap"
 import Layout from "../core/Layout"
-import template from "../assets/images/template.png"
+import mobile_login from "../assets/images/mobile_login.svg"
 import { useNavigate } from "react-router"
 import auth from "./../auth/auth-helper"
 import { signin } from "./api-auth.js"
@@ -52,10 +44,10 @@ const Signin = (props) => {
   return (
     <>
       <Layout>
-        <Container>
+        <Container className="align-self-center">
           <Row xs={1} md={2} className="align-items-center">
             <Col>
-              <Image src={template} className="w-100" />
+              <Image src={mobile_login} className="w-100" />
             </Col>
             <Col>
               <h1 className="mb-4 text-center mt-4 mt-md-0">Авторизация</h1>
