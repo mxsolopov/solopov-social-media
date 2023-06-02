@@ -2,6 +2,7 @@ import React from "react"
 import { Form, Button } from "react-bootstrap"
 import auth from "./../auth/auth-helper"
 import { create } from "./api-post.js"
+import { read } from "../user/api-user"
 
 const PostForm = ({ addPost }) => {
   const [values, setValues] = React.useState({
@@ -12,9 +13,25 @@ const PostForm = ({ addPost }) => {
   })
 
   const jwt = auth.isAuthenticated()
+  
   React.useEffect(() => {
-    setValues({ ...values, user: auth.isAuthenticated().user })
+    const abortController = new AbortController()
+    const signal = abortController.signal
+
+    // Чтение данных для профиля пользователя
+    read({ userId: jwt.user._id }, { t: jwt.token }, signal).then((data) => {
+      if (data && data.error) {
+        console.log(data.error)
+      } else {
+        setValues({ ...values, user: {_id: data._id, name: data.name, avatar: data.avatar} })
+      }
+    })
+
+    return function cleanup() {
+      abortController.abort()
+    }
   }, [])
+
   const clickPost = (event) => {
     event.preventDefault()
     const postData = {

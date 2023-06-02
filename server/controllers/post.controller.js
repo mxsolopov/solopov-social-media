@@ -20,8 +20,8 @@ const listNewsFeed = async (req, res) => {
     const following = user.following
     following.push(req.params.userId)
     let posts = await Post.find({ postedBy: { $in: following } })
-      .populate("comments.postedBy", "_id name")
-      .populate("postedBy", "_id name")
+      .populate("comments.postedBy", "_id name avatar")
+      .populate("postedBy", "_id name avatar")
       .sort("-created")
       .exec()
     res.status(200).json(posts)

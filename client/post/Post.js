@@ -5,14 +5,12 @@ import { ThumbsDown, ThumbsUp } from "phosphor-react"
 import CommentForm from "./CommentForm"
 import { like, removelike, dislike, removedislike } from "./api-post"
 import auth from "../auth/auth-helper"
-import { read } from "../user/api-user"
 
 const Post = ({ post, postId, addComment, updatePost }) => {
   const jwt = auth.isAuthenticated()
   const userId = jwt.user._id
   const isDislike = post.dislikes.includes(userId)
   const isLike = post.likes.includes(userId)
-  const [user, setUser] = React.useState({})
 
   const formatDateToLocal = (dateString) => {
     const date = new Date(dateString)
@@ -25,24 +23,6 @@ const Post = ({ post, postId, addComment, updatePost }) => {
 
     return `${day}.${month}.${year} ${hours}:${minutes}`
   }
-
-  React.useEffect(() => {
-    const abortController = new AbortController()
-    const signal = abortController.signal
-
-    // Чтение данных для профиля пользователя
-    read({ userId: post.postedBy._id }, { t: jwt.token }, signal).then((data) => {
-      if (data && data.error) {
-        console.log(data.error)
-      } else {
-        setUser(data)
-      }
-    })
-
-    return function cleanup() {
-      abortController.abort()
-    }
-  }, [])
 
   const upRate = () => {
     let callApi = isLike ? removelike : like
@@ -153,7 +133,7 @@ const Post = ({ post, postId, addComment, updatePost }) => {
       <Card.Header>
         <div className="d-flex align-items-center gap-2">
           <Image
-            src={`/avatars/${user.avatar || "avatar-template-mx.png"}`}
+            src={`/avatars/${post.postedBy.avatar}`}
             roundedCircle
             style={{
               width: "50px",
