@@ -1,12 +1,12 @@
 import React from "react"
 import { Card, Button, Image } from "react-bootstrap"
 import CommentList from "./CommentList"
-import { ThumbsDown, ThumbsUp } from "phosphor-react"
+import { ThumbsDown, ThumbsUp, TrashSimple } from "phosphor-react"
 import CommentForm from "./CommentForm"
-import { like, removelike, dislike, removedislike } from "./api-post"
+import { like, removelike, dislike, removedislike, removePost } from "./api-post"
 import auth from "../auth/auth-helper"
 
-const Post = ({ post, postId, addComment, updatePost }) => {
+const Post = ({ post, postId, addComment, updatePost, deletePost }) => {
   const jwt = auth.isAuthenticated()
   const userId = jwt.user._id
   const isDislike = post.dislikes.includes(userId)
@@ -128,9 +128,26 @@ const Post = ({ post, postId, addComment, updatePost }) => {
       })
   }
 
+  const fullDeletePost = () => {
+    removePost(
+      {
+        postId: postId,
+      },
+      {
+        t: jwt.token,
+      },
+    ).then((data) => {
+      if (data.error) {
+        console.log(data.error)
+      } else {
+        deletePost(postId)
+      }
+    })
+  }
+
   return (
     <Card className="mb-4">
-      <Card.Header>
+      <Card.Header className="d-flex align-items-center justify-content-between">
         <div className="d-flex align-items-center gap-2">
           <Image
             src={`/avatars/${post.postedBy.avatar}`}
@@ -148,6 +165,11 @@ const Post = ({ post, postId, addComment, updatePost }) => {
             </div>
           </div>
         </div>
+        {post.postedBy._id === userId && (
+          <Button variant="outline-danger" size="sm" onClick={fullDeletePost}>
+            <TrashSimple size={16} style={{ transform: "translateY(-2px)" }} />
+          </Button>
+        )}
       </Card.Header>
       <Card.Body>
         <h3 style={{ fontSize: "18px", fontWeight: 500 }}>{post.title}</h3>

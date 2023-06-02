@@ -55,6 +55,18 @@ const comment = async (req, res) => {
   }
 }
 
+const removePost = async (req, res) => {
+  try {
+    const postId = req.params.postId
+    await Post.deleteOne({ _id: postId })
+    res.status(200).json("Post deleted")
+  } catch (err) {
+    return res.status(400).json({
+      error: errorHandler.getErrorMessage(err),
+    })
+  }
+}
+
 const like = async (req, res) => {
   try {
     let result = await Post.findByIdAndUpdate(
@@ -123,4 +135,5 @@ export default {
   removelike,
   dislike,
   removedislike,
+  removePost,
 }

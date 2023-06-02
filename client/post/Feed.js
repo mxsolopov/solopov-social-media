@@ -38,6 +38,11 @@ const Feed = () => {
     setPosts(updatedPosts)
   }
 
+  const deletePost = (postId) => {
+    const updatedPosts = [...posts.filter(post => post._id !== postId)]
+    setPosts(updatedPosts)
+  }
+
   const addComment = (postId, comment) => {
     const updatedPosts = posts.map((post) => {
       if (post._id === postId) {
@@ -64,7 +69,7 @@ const Feed = () => {
   return (
     <>
       <PostForm addPost={addPost} />
-      <PostList posts={posts} addComment={addComment} updatePost={updatePost} />
+      <PostList posts={posts} addComment={addComment} updatePost={updatePost} deletePost={deletePost} />
     </>
   )
 }

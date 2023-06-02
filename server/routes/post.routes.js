@@ -13,6 +13,10 @@ router
   .route("/api/posts/feed/:userId")
   .get(authCtrl.requireSignin, postCtrl.listNewsFeed)
 
+router
+  .route("/api/posts/:postId")
+  .delete(authCtrl.requireSignin, postCtrl.removePost)
+
 router.route("/api/posts/comment").put(authCtrl.requireSignin, postCtrl.comment)
 
 router.route("/api/posts/like").put(authCtrl.requireSignin, postCtrl.like)
