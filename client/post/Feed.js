@@ -39,7 +39,7 @@ const Feed = () => {
   }
 
   const deletePost = (postId) => {
-    const updatedPosts = [...posts.filter(post => post._id !== postId)]
+    const updatedPosts = [...posts.filter((post) => post._id !== postId)]
     setPosts(updatedPosts)
   }
 
@@ -54,22 +54,57 @@ const Feed = () => {
     setPosts(updatedPosts)
   }
 
+  const deleteComment = (postId, commentId) => {
+    setPosts((prevPosts) => {
+      // Клонируем массив постов
+      const updatedPosts = [...prevPosts]
+
+      // Находим индекс поста, содержащего комментарий
+      const postIndex = updatedPosts.findIndex((post) => post._id === postId)
+
+      if (postIndex !== -1) {
+        // Клонируем комментарии поста
+        const updatedComments = [...updatedPosts[postIndex].comments]
+
+        // Находим индекс комментария для удаления
+        const commentIndex = updatedComments.findIndex(
+          (comment) => comment._id === commentId
+        )
+
+        if (commentIndex !== -1) {
+          // Удаляем комментарий из массива комментариев
+          updatedComments.splice(commentIndex, 1)
+
+          // Обновляем комментарии в посте
+          updatedPosts[postIndex].comments = updatedComments
+        }
+      }
+      return updatedPosts
+    })
+  }
+
   const updatePost = (postId, newData) => {
     setPosts(() => {
       const updatedPosts = posts.map((post) => {
         if (post._id === postId) {
-          return { ...post, ...newData };
+          return { ...post, ...newData }
         }
-        return post;
-      });
-      return updatedPosts;
-    });
-  };
+        return post
+      })
+      return updatedPosts
+    })
+  }
 
   return (
     <>
       <PostForm addPost={addPost} />
-      <PostList posts={posts} addComment={addComment} updatePost={updatePost} deletePost={deletePost} />
+      <PostList
+        posts={posts}
+        addComment={addComment}
+        updatePost={updatePost}
+        deletePost={deletePost}
+        deleteComment={deleteComment}
+      />
     </>
   )
 }

@@ -67,6 +67,29 @@ const removePost = async (req, res) => {
   }
 }
 
+const removeComment = async (req, res) => {
+  try {
+    const { postId, commentId } = req.params;
+
+    console.log(postId, commentId)
+
+    const updatedPost = await Post.findByIdAndUpdate(
+      postId,
+      { $pull: { comments: { _id: commentId } } },
+      { new: true }
+    );
+
+    if (!updatedPost) {
+      return res.status(404).json({ error: 'Post not found' });
+    }
+
+    res.status(200).json({ message: 'Comment deleted' });
+  } catch (err) {
+    return res.status(400).json({ error: errorHandler.getErrorMessage(err) });
+  }
+};
+
+
 const like = async (req, res) => {
   try {
     let result = await Post.findByIdAndUpdate(
@@ -136,4 +159,5 @@ export default {
   dislike,
   removedislike,
   removePost,
+  removeComment
 }

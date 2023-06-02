@@ -48,6 +48,22 @@ const removePost = async (params, credentials) => {
   }
 }
 
+const removeComment = async (params, credentials) => {
+  try {
+    let response = await fetch('/api/posts/' + params.postId + "/" + params.commentId, {
+      method: 'DELETE',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer ' + credentials.t
+      }
+    })
+    return await response.json()
+  } catch(err) {
+    console.log(err)
+  }
+}
+
 const comment = async (params, credentials, postId, comment) => {
   try {
     let response = await fetch("/api/posts/comment/", {
@@ -146,4 +162,5 @@ export {
   dislike,
   removedislike,
   removePost,
+  removeComment
 }

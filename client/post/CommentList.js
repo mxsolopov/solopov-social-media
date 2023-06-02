@@ -1,7 +1,7 @@
 import React from "react"
 import Comment from "./Comment"
 
-const CommentList = ({ comments, formatDateToLocal }) => {
+const CommentList = ({ comments, deleteComment, postId, formatDateToLocal }) => {
   return (
     <>
       <div>
@@ -11,6 +11,9 @@ const CommentList = ({ comments, formatDateToLocal }) => {
             <Comment
               key={i}
               comment={comment}
+              postId={postId}
+              commentId={comment._id}
+              deleteComment={deleteComment}
               formatDateToLocal={formatDateToLocal}
             />
           )

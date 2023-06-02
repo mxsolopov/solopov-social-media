@@ -17,6 +17,10 @@ router
   .route("/api/posts/:postId")
   .delete(authCtrl.requireSignin, postCtrl.removePost)
 
+router
+  .route("/api/posts/:postId/:commentId")
+  .delete(authCtrl.requireSignin, postCtrl.removeComment)
+
 router.route("/api/posts/comment").put(authCtrl.requireSignin, postCtrl.comment)
 
 router.route("/api/posts/like").put(authCtrl.requireSignin, postCtrl.like)

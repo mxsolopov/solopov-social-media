@@ -8,14 +8,11 @@ const PostSchema = new mongoose.Schema({
     type: String,
     required: "Text is required",
   },
-  // photo: {
-  //   data: Buffer,
-  //   contentType: String,
-  // },
   likes: [{ type: mongoose.Schema.ObjectId, ref: "User" }],
   dislikes: [{ type: mongoose.Schema.ObjectId, ref: "User" }],
   comments: [
     {
+      _id: { type: String },
       text: {
         type: String,
       },

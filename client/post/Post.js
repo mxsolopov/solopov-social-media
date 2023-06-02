@@ -6,7 +6,7 @@ import CommentForm from "./CommentForm"
 import { like, removelike, dislike, removedislike, removePost } from "./api-post"
 import auth from "../auth/auth-helper"
 
-const Post = ({ post, postId, addComment, updatePost, deletePost }) => {
+const Post = ({ post, postId, addComment, updatePost, deletePost, deleteComment }) => {
   const jwt = auth.isAuthenticated()
   const userId = jwt.user._id
   const isDislike = post.dislikes.includes(userId)
@@ -191,6 +191,8 @@ const Post = ({ post, postId, addComment, updatePost, deletePost }) => {
         <hr />
         <CommentList
           comments={post.comments}
+          deleteComment={deleteComment}
+          postId={postId}
           formatDateToLocal={formatDateToLocal}
         />
       </Card.Body>

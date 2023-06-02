@@ -3,6 +3,7 @@ import { Form, Button } from "react-bootstrap"
 import auth from "../auth/auth-helper"
 import { comment } from "./api-post"
 import { read } from "../user/api-user"
+import { nanoid } from "nanoid"
 
 const CommentForm = ({ postId, addComment}) => {
   const [values, setValues] = React.useState({
@@ -32,6 +33,7 @@ const CommentForm = ({ postId, addComment}) => {
   const clickComment = (event) => {
     event.preventDefault()
     const commentData = {
+      _id: nanoid(),
       text: values.text,
       postedBy: values.user,
       created: Date.now(),
