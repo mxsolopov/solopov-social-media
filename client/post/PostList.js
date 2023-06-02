@@ -1,13 +1,34 @@
 import React from "react"
 import Post from "./Post"
+import EmptyBlock from "../core/EmptyBlock"
 
-const PostList = ({ posts, addComment, updatePost, deleteComment, deletePost }) => {
+const PostList = ({
+  posts,
+  addComment,
+  updatePost,
+  deleteComment,
+  deletePost,
+}) => {
   return (
     <div>
       <h2 className="mb-3">Опубликованные посты</h2>
-      {posts.map((post, i) => {
-        return <Post key={i} post={post} postId={post._id} addComment={addComment} deleteComment={deleteComment} updatePost={updatePost} deletePost={deletePost} />
-      })}
+      {posts.length !== 0 ? (
+        posts.map((post, i) => {
+          return (
+            <Post
+              key={i}
+              post={post}
+              postId={post._id}
+              addComment={addComment}
+              deleteComment={deleteComment}
+              updatePost={updatePost}
+              deletePost={deletePost}
+            />
+          )
+        })
+      ) : (
+        <EmptyBlock />
+      )}
     </div>
   )
 }

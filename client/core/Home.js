@@ -7,6 +7,7 @@ import social_networking from "../assets/images/social_networking.svg"
 import { useMediaQuery } from "react-responsive"
 import { useNavigate } from "react-router"
 import { Note, ThumbsUp, UsersThree } from "phosphor-react"
+import Sidebar from "../user/Sidebar"
 
 const Home = () => {
   const isAuthenticated = auth.isAuthenticated()
@@ -20,7 +21,10 @@ const Home = () => {
             <Col lg={8}>
               <Feed />
             </Col>
-            <Col lg={4}>Сайдбар</Col>
+            <Col lg={4}>
+              <h2>Рекомендации</h2>
+              <Sidebar />
+            </Col>
           </Row>
         </Container>
       ) : (
