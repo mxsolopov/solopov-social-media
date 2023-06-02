@@ -18,6 +18,7 @@ import Layout from "../core/Layout"
 import { Trash, PencilSimple, FloppyDisk } from "phosphor-react"
 import FollowProfileButton from "./FollowProfileButton"
 import FollowGrid from "./FollowGrid"
+import PostsByUser from "./PostsByUser"
 
 const Profile = () => {
   const { userId } = useParams()
@@ -378,7 +379,7 @@ const Profile = () => {
                 justify
               >
                 <Tab eventKey="home" title="Посты">
-                  1
+                  <PostsByUser />
                 </Tab>
                 <Tab eventKey="profile" title="Подписан">
                   <FollowGrid followUsers={followingUsers} />
