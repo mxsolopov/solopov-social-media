@@ -2,6 +2,7 @@ import User from "../models/user.model"
 import extend from "lodash/extend"
 import errorHandler from "./../helpers/dbErrorHandler"
 import fs from "fs"
+import path from "path"
 
 const create = async (req, res) => {
   const user = new User(req.body)
@@ -79,7 +80,11 @@ const remove = async (req, res) => {
 
 const removeAvatar = async (req, res) => {
   const { filename } = req.params
-  const filePath = `/static/avatars/${filename}`
+  const CURRENT_WORKING_DIR = process.cwd()
+  const filePath = path.join(
+    CURRENT_WORKING_DIR,
+    `server/static/avatars/${filename}`
+  )
 
   fs.access(filePath, fs.constants.F_OK, (err) => {
     if (err) {
@@ -91,7 +96,6 @@ const removeAvatar = async (req, res) => {
           console.error("Failed to delete avatar:", err)
           res.status(500).json({ error: "Failed to delete avatar" })
         } else {
-          console.log("Avatar deleted successfully")
           res.status(200).json({ message: "Avatar deleted" })
         }
       })

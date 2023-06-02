@@ -12,7 +12,6 @@ devBundle.compile(app)
 const CURRENT_WORKING_DIR = process.cwd()
 // app.use("/dist", express.static(path.join(CURRENT_WORKING_DIR, "dist")))
 app.use(express.static(path.join(CURRENT_WORKING_DIR, "server/static")))
-console.log(path.join(CURRENT_WORKING_DIR, "server/static"))
 
 app.get("/*", (req, res) => {
   res.status(200).type("html").send(html)
