@@ -11,7 +11,7 @@ import {
   Tab,
 } from "react-bootstrap"
 import auth from "../auth/auth-helper"
-import { read, update, remove, list } from "./api-user"
+import { read, update, remove, list, removeAvatar } from "./api-user"
 import { useNavigate } from "react-router"
 import { useParams } from "react-router-dom"
 import Layout from "../core/Layout"
@@ -19,6 +19,7 @@ import { Trash, PencilSimple, FloppyDisk } from "phosphor-react"
 import FollowProfileButton from "./FollowProfileButton"
 import FollowGrid from "./FollowGrid"
 import PostsByUser from "./PostsByUser"
+import { removeUserPosts } from "../post/api-post"
 
 const Profile = () => {
   const { userId } = useParams()
@@ -118,9 +119,33 @@ const Profile = () => {
     })
   }
 
-  // Удаление профиля
   const deleteAccount = () => {
+    // Удаление профиля
     remove(
+      {
+        userId: userId,
+      },
+      { t: jwt.token }
+    ).then((data) => {
+      if (data && data.error) {
+        console.log(data.error)
+      } else {
+        // Удаление аватара из папки на сервере
+        removeAvatar(
+          {
+            filename: avatarFileName,
+          },
+          { t: jwt.token }
+        ).then((data) => {
+          if (data && data.error) {
+            console.log(data.error)
+          } else {
+          }
+        })
+      }
+    })
+    // Удаление постов
+    removeUserPosts(
       {
         userId: userId,
       },

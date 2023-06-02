@@ -76,6 +76,22 @@ const remove = async (params, credentials) => {
   }
 }
 
+const removeAvatar = async (params, credentials) => {
+  try {
+    let response = await fetch("/api/avatar/" + params.filename, {
+      method: "DELETE",
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+        Authorization: "Bearer " + credentials.t,
+      },
+    })
+    return await response.json()
+  } catch (err) {
+    console.log(err)
+  }
+}
+
 const follow = async (params, credentials, followId) => {
   try {
     let response = await fetch("/api/users/follow/", {
@@ -110,4 +126,4 @@ const unfollow = async (params, credentials, unfollowId) => {
   }
 }
 
-export { create, list, read, update, remove, follow, unfollow }
+export { create, list, read, update, remove, removeAvatar, follow, unfollow }

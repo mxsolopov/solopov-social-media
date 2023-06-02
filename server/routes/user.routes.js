@@ -46,6 +46,10 @@ router
     }
   })
 
+  router
+  .route("/api/avatar/:filename")
+  .delete(authCtrl.requireSignin, userCtrl.removeAvatar)
+
 router
   .route("/api/users/follow")
   .put(authCtrl.requireSignin, userCtrl.addFollowing, userCtrl.addFollower)

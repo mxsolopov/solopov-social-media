@@ -1,6 +1,7 @@
 import User from "../models/user.model"
 import extend from "lodash/extend"
 import errorHandler from "./../helpers/dbErrorHandler"
+import fs from "fs"
 
 const create = async (req, res) => {
   const user = new User(req.body)
@@ -13,7 +14,9 @@ const create = async (req, res) => {
 }
 const list = async (req, res) => {
   try {
-    const users = await User.find().select("name email updated avatar created followers following")
+    const users = await User.find().select(
+      "name email updated avatar created followers following"
+    )
     res.json(users)
   } catch (err) {
     return res.status(400).json({
@@ -72,6 +75,28 @@ const remove = async (req, res) => {
       error: errorHandler.getErrorMessage(err),
     })
   }
+}
+
+const removeAvatar = async (req, res) => {
+  const { filename } = req.params
+  const filePath = `/static/avatars/${filename}`
+
+  fs.access(filePath, fs.constants.F_OK, (err) => {
+    if (err) {
+      console.error("Avatar does not exist:", err)
+      res.status(404).json({ error: "Avatar does not exist" })
+    } else {
+      fs.unlink(filePath, (err) => {
+        if (err) {
+          console.error("Failed to delete avatar:", err)
+          res.status(500).json({ error: "Failed to delete avatar" })
+        } else {
+          console.log("Avatar deleted successfully")
+          res.status(200).json({ message: "Avatar deleted" })
+        }
+      })
+    }
+  })
 }
 
 const addFollowing = async (req, res, next) => {
@@ -150,4 +175,5 @@ export default {
   addFollower,
   removeFollowing,
   removeFollower,
+  removeAvatar,
 }

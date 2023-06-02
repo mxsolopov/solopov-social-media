@@ -18,6 +18,10 @@ router
   .delete(authCtrl.requireSignin, postCtrl.removePost)
 
 router
+  .route("/api/posts/user/:userId")
+  .delete(authCtrl.requireSignin, postCtrl.removeUserPosts)
+
+router
   .route("/api/posts/:postId/:commentId")
   .delete(authCtrl.requireSignin, postCtrl.removeComment)
 

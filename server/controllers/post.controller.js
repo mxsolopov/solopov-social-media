@@ -67,9 +67,21 @@ const removePost = async (req, res) => {
   }
 }
 
+const removeUserPosts = async (req, res) => {
+  try {
+    const userId = req.params.userId
+    await Post.deleteMany({ postedBy: userId })
+    res.status(200).json("Posts deleted")
+  } catch (err) {
+    return res.status(400).json({
+      error: errorHandler.getErrorMessage(err),
+    })
+  }
+}
+
 const removeComment = async (req, res) => {
   try {
-    const { postId, commentId } = req.params;
+    const { postId, commentId } = req.params
 
     console.log(postId, commentId)
 
@@ -77,18 +89,17 @@ const removeComment = async (req, res) => {
       postId,
       { $pull: { comments: { _id: commentId } } },
       { new: true }
-    );
+    )
 
     if (!updatedPost) {
-      return res.status(404).json({ error: 'Post not found' });
+      return res.status(404).json({ error: "Post not found" })
     }
 
-    res.status(200).json({ message: 'Comment deleted' });
+    res.status(200).json({ message: "Comment deleted" })
   } catch (err) {
-    return res.status(400).json({ error: errorHandler.getErrorMessage(err) });
+    return res.status(400).json({ error: errorHandler.getErrorMessage(err) })
   }
-};
-
+}
 
 const like = async (req, res) => {
   try {
@@ -159,5 +170,6 @@ export default {
   dislike,
   removedislike,
   removePost,
-  removeComment
+  removeComment,
+  removeUserPosts,
 }
